@@ -112,7 +112,7 @@ export const TelcExamDetails = () => {
                   Prüfungstermin auswählen <span className="text-red-500">*</span>
                 </Label>
                 <RadioGroup value={selectedDate} onValueChange={setSelectedDate}>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-1">
                     {examDates.map((date) => (
                       <div key={date} className="flex items-center space-x-2">
                         <RadioGroupItem value={date} id={`date-${date}`} />
