@@ -106,11 +106,6 @@ export const TelcExamDetails = () => {
           {/* Booking Form */}
           <Card>
             <CardContent className="p-6 space-y-6">
-              {/* Save Configuration Button */}
-              <Button variant="outline" className="w-full border-red-500 text-red-500 hover:bg-red-50">
-                Produktkonfiguration speichern
-              </Button>
-
               {/* Exam Date Selection - Radio Buttons */}
               <div>
                 <Label className="mb-3 block">
