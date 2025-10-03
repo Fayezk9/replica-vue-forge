@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const TelcExamDetails = () => {
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [certificateDelivery, setCertificateDelivery] = useState("office");
@@ -209,6 +211,7 @@ export const TelcExamDetails = () => {
                 className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed" 
                 size="lg"
                 disabled={!isFormValid}
+                onClick={() => navigate("/warenkorb")}
               >
                 In den Warenkorb
               </Button>
