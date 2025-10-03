@@ -2,7 +2,7 @@ import { TopBar } from "@/components/TopBar";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import telcExamStudent from "@/assets/telc-exam-student.jpg";
@@ -97,7 +97,7 @@ const Cart = () => {
                           className="text-red-600 hover:text-red-700"
                           aria-label="Artikel entfernen"
                         >
-                          <X className="w-5 h-5" />
+                          <Trash2 className="w-5 h-5" />
                         </button>
                       </td>
                       <td className="border border-border p-4">
