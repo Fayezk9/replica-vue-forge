@@ -141,22 +141,24 @@ export const TelcExamDetails = () => {
                 </Select>
               </div>
 
-              <div>
-                <Label htmlFor="certificate" className="mb-2 block">
-                  Prüfungszertifikat hochladen *
-                </Label>
-                <input
-                  type="file"
-                  id="certificate"
-                  className="block w-full text-sm text-muted-foreground
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-md file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-primary file:text-primary-foreground
-                    hover:file:bg-primary/90"
-                />
-              </div>
-
+              {/* Only show certificate upload for written or oral exams */}
+              {(selectedType === "written" || selectedType === "oral") && (
+                <div>
+                  <Label htmlFor="certificate" className="mb-2 block">
+                    Prüfungszertifikat hochladen *
+                  </Label>
+                  <input
+                    type="file"
+                    id="certificate"
+                    className="block w-full text-sm text-muted-foreground
+                      file:mr-4 file:py-2 file:px-4
+                      file:rounded-md file:border-0
+                      file:text-sm file:font-semibold
+                      file:bg-primary file:text-primary-foreground
+                      hover:file:bg-primary/90"
+                  />
+                </div>
+              )}
               <Button className="w-full" size="lg">
                 Zur Kasse
               </Button>
