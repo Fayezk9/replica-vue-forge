@@ -436,7 +436,11 @@ const Checkout = () => {
                           <Calendar
                             mode="single"
                             selected={formData.birthDate}
-                            onSelect={handleDateChange}
+                            onSelect={(date) => {
+                              handleDateChange(date);
+                              // Close popover by clicking outside
+                              document.body.click();
+                            }}
                             disabled={(date) =>
                               date > new Date() || date < new Date("1900-01-01")
                             }
