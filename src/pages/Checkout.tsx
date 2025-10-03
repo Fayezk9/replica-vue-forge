@@ -16,7 +16,6 @@ import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
 
 interface CartItem {
   id: string;
@@ -306,33 +305,28 @@ const Checkout = () => {
                         {errors.street && <p className="text-red-600 text-sm mt-1">{errors.street}</p>}
                         
                         {showStreetSuggestions && streetSuggestions.length > 0 && (
-                          <div className="absolute z-50 w-full mt-1 bg-popover border border-border rounded-md shadow-md max-h-[300px] overflow-hidden">
-                            <Command className="rounded-lg border-none">
-                              <CommandList>
-                                {isLoadingStreets ? (
-                                  <div className="p-4 text-sm text-muted-foreground">Laden...</div>
-                                ) : (
-                                  <CommandGroup>
-                                    {streetSuggestions.map((suggestion, index) => (
-                                      <CommandItem
-                                        key={`${suggestion.name}-${suggestion.locality}-${index}`}
-                                        value={suggestion.name}
-                                        onSelect={() => handleSelectStreet(suggestion)}
-                                        className="cursor-pointer"
-                                      >
-                                        <div className="flex flex-col">
-                                          <span className="font-medium">{suggestion.name}</span>
-                                          <span className="text-sm text-muted-foreground">
-                                            {suggestion.postalCode} {suggestion.locality}
-                                            {suggestion.borough && ` (${suggestion.borough})`}
-                                          </span>
-                                        </div>
-                                      </CommandItem>
-                                    ))}
-                                  </CommandGroup>
-                                )}
-                              </CommandList>
-                            </Command>
+                          <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border-2 border-primary rounded-md shadow-lg max-h-[300px] overflow-auto">
+                            {isLoadingStreets ? (
+                              <div className="p-4 text-sm text-muted-foreground">Laden...</div>
+                            ) : (
+                              <div>
+                                {streetSuggestions.map((suggestion, index) => (
+                                  <div
+                                    key={`${suggestion.name}-${suggestion.locality}-${index}`}
+                                    onClick={() => handleSelectStreet(suggestion)}
+                                    className="px-4 py-3 cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors border-b border-border last:border-b-0"
+                                  >
+                                    <div className="flex flex-col">
+                                      <span className="font-semibold text-base">{suggestion.name}</span>
+                                      <span className="text-sm opacity-90 mt-1">
+                                        {suggestion.postalCode} {suggestion.locality}
+                                        {suggestion.borough && ` (${suggestion.borough})`}
+                                      </span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
