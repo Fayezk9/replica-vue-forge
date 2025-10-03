@@ -6,10 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { format } from "date-fns";
+import { de } from "date-fns/locale";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface CartItem {
   id: string;
@@ -30,6 +36,10 @@ const checkoutSchema = z.object({
   city: z.string().min(1, "Stadt ist erforderlich").max(100),
   phone: z.string().min(1, "Telefon ist erforderlich").max(30),
   email: z.string().email("Ungültige E-Mail-Adresse").max(255),
+  birthDate: z.date({ required_error: "Geburtsdatum ist erforderlich" }),
+  birthPlace: z.string().min(1, "Geburtsort ist erforderlich").max(100),
+  birthCountry: z.string().min(1, "Geburtsland ist erforderlich").max(100),
+  motherTongue: z.string().max(100).optional(),
   orderNotes: z.string().max(1000).optional(),
 });
 
@@ -47,6 +57,10 @@ const Checkout = () => {
     city: "",
     phone: "",
     email: "",
+    birthDate: undefined as Date | undefined,
+    birthPlace: "",
+    birthCountry: "",
+    motherTongue: "",
     orderNotes: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -86,6 +100,13 @@ const Checkout = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handleDateChange = (date: Date | undefined) => {
+    setFormData(prev => ({ ...prev, birthDate: date }));
+    if (errors.birthDate) {
+      setErrors(prev => ({ ...prev, birthDate: "" }));
     }
   };
 
@@ -133,7 +154,7 @@ const Checkout = () => {
             <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-8">Kasse</h1>
             
             <form onSubmit={handleSubmit}>
-              <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+              <div className="space-y-8">
                 {/* Billing Details */}
                 <div>
                   <h2 className="font-serif text-xl md:text-2xl font-bold mb-4 md:mb-6">Rechnungsdetails</h2>
@@ -260,18 +281,102 @@ const Checkout = () => {
                       />
                       {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
                     </div>
+                  </div>
+                </div>
+
+                {/* Birth Information */}
+                <div>
+                  <h2 className="font-serif text-xl md:text-2xl font-bold mb-4 md:mb-6">Geburtsinformationen</h2>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="birthDate">Geburtsdatum <span className="text-red-600">*</span></Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left font-normal",
+                              !formData.birthDate && "text-muted-foreground",
+                              errors.birthDate && "border-red-500"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {formData.birthDate ? (
+                              format(formData.birthDate, "dd.MM.yyyy", { locale: de })
+                            ) : (
+                              <span>01.01.1990</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={formData.birthDate}
+                            onSelect={handleDateChange}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                            className="p-3 pointer-events-auto"
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      {errors.birthDate && <p className="text-red-600 text-sm mt-1">{errors.birthDate}</p>}
+                    </div>
 
                     <div>
-                      <Label htmlFor="orderNotes">Bestellnotizen (optional)</Label>
-                      <Textarea
-                        id="orderNotes"
-                        name="orderNotes"
-                        value={formData.orderNotes}
+                      <Label htmlFor="birthPlace">Geburtsort (Die Stadt, wo Sie geboren sind) <span className="text-red-600">*</span></Label>
+                      <Input
+                        id="birthPlace"
+                        name="birthPlace"
+                        value={formData.birthPlace}
                         onChange={handleInputChange}
-                        placeholder="Anmerkungen zu deiner Bestellung, z.B. besondere Hinweise für die Lieferung."
-                        rows={4}
+                        placeholder="z.B Berlin"
+                        className={errors.birthPlace ? "border-red-500" : ""}
+                      />
+                      {errors.birthPlace && <p className="text-red-600 text-sm mt-1">{errors.birthPlace}</p>}
+                    </div>
+
+                    <div>
+                      <Label htmlFor="birthCountry">Geburtsland (Das Land, wo Sie geboren sind) <span className="text-red-600">*</span></Label>
+                      <Input
+                        id="birthCountry"
+                        name="birthCountry"
+                        value={formData.birthCountry}
+                        onChange={handleInputChange}
+                        placeholder="Deutschland"
+                        className={errors.birthCountry ? "border-red-500" : ""}
+                      />
+                      {errors.birthCountry && <p className="text-red-600 text-sm mt-1">{errors.birthCountry}</p>}
+                    </div>
+
+                    <div>
+                      <Label htmlFor="motherTongue">Muttersprache (optional)</Label>
+                      <Input
+                        id="motherTongue"
+                        name="motherTongue"
+                        value={formData.motherTongue}
+                        onChange={handleInputChange}
                       />
                     </div>
+                  </div>
+                </div>
+
+                {/* Order Notes */}
+                <div>
+                  <h2 className="font-serif text-xl md:text-2xl font-bold mb-4 md:mb-6">Zusätzliche Informationen</h2>
+                  
+                  <div>
+                    <Label htmlFor="orderNotes">Bestellnotizen (optional)</Label>
+                    <Textarea
+                      id="orderNotes"
+                      name="orderNotes"
+                      value={formData.orderNotes}
+                      onChange={handleInputChange}
+                      placeholder="Anmerkungen zu deiner Bestellung, z.B. besondere Hinweise für die Lieferung."
+                      rows={4}
+                    />
                   </div>
                 </div>
 
