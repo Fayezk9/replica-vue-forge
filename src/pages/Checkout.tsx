@@ -257,6 +257,22 @@ const Checkout = () => {
   const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const total = subtotal;
 
+  // Check if all required fields are filled
+  const isFormValid = formData.gender !== "" &&
+    formData.firstName.trim() !== "" &&
+    formData.lastName.trim() !== "" &&
+    formData.street.trim() !== "" &&
+    formData.houseNumber.trim() !== "" &&
+    formData.postcode.trim() !== "" &&
+    formData.city.trim() !== "" &&
+    formData.phone.trim() !== "" &&
+    formData.email.trim() !== "" &&
+    formData.birthDate !== undefined &&
+    formData.birthPlace.trim() !== "" &&
+    formData.birthCountry.trim() !== "" &&
+    formData.motherTongue.trim() !== "" &&
+    formData.orderNotes.trim() !== "";
+
   return (
     <div className="min-h-screen bg-background">
       <TopBar />
@@ -644,7 +660,8 @@ const Checkout = () => {
 
                   <Button 
                     type="submit"
-                    className="w-full mt-6 bg-purple-600 hover:bg-purple-700 text-base md:text-lg py-5 md:py-6"
+                    disabled={!isFormValid}
+                    className="w-full mt-6 bg-purple-600 hover:bg-purple-700 text-base md:text-lg py-5 md:py-6 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Zahlungspflichtig bestellen
                   </Button>
