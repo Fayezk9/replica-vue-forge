@@ -9,13 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
 
 interface CartItem {
   id: string;
@@ -24,6 +25,17 @@ interface CartItem {
   examType: string;
   certificateDelivery: string;
   price: number;
+}
+
+interface AddressSuggestion {
+  display_name: string;
+  address: {
+    road?: string;
+    city?: string;
+    town?: string;
+    village?: string;
+    postcode?: string;
+  };
 }
 
 const checkoutSchema = z.object({
@@ -64,6 +76,10 @@ const Checkout = () => {
     orderNotes: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [streetSuggestions, setStreetSuggestions] = useState<AddressSuggestion[]>([]);
+  const [showStreetSuggestions, setShowStreetSuggestions] = useState(false);
+  const [isLoadingStreets, setIsLoadingStreets] = useState(false);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const savedCart = localStorage.getItem("cartData");
@@ -108,6 +124,74 @@ const Checkout = () => {
     if (errors.birthDate) {
       setErrors(prev => ({ ...prev, birthDate: "" }));
     }
+  };
+
+  const fetchStreetSuggestions = useCallback(async (query: string) => {
+    if (query.length < 2) {
+      setStreetSuggestions([]);
+      return;
+    }
+
+    setIsLoadingStreets(true);
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?` +
+        `street=${encodeURIComponent(query)}&` +
+        `country=Germany&` +
+        `format=json&` +
+        `addressdetails=1&` +
+        `limit=10`,
+        {
+          headers: {
+            'Accept': 'application/json',
+          }
+        }
+      );
+      
+      const data = await response.json();
+      setStreetSuggestions(data);
+      setShowStreetSuggestions(true);
+    } catch (error) {
+      console.error("Error fetching street suggestions:", error);
+    } finally {
+      setIsLoadingStreets(false);
+    }
+  }, []);
+
+  const handleStreetInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      fetchStreetSuggestions(value);
+    }, 300);
+  };
+
+  const handleSelectStreet = (suggestion: AddressSuggestion) => {
+    const street = suggestion.address.road || "";
+    const city = suggestion.address.city || suggestion.address.town || suggestion.address.village || "";
+    const postcode = suggestion.address.postcode || "";
+
+    setFormData(prev => ({
+      ...prev,
+      street,
+      city,
+      postcode
+    }));
+    
+    setShowStreetSuggestions(false);
+    setStreetSuggestions([]);
+    
+    if (errors.street) setErrors(prev => ({ ...prev, street: "" }));
+    if (errors.city) setErrors(prev => ({ ...prev, city: "" }));
+    if (errors.postcode) setErrors(prev => ({ ...prev, postcode: "" }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -205,16 +289,60 @@ const Checkout = () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
+                      <div className="relative">
                         <Label htmlFor="street">Straße <span className="text-red-600">*</span></Label>
                         <Input
                           id="street"
                           name="street"
                           value={formData.street}
-                          onChange={handleInputChange}
+                          onChange={handleStreetInputChange}
+                          onFocus={() => {
+                            if (streetSuggestions.length > 0) {
+                              setShowStreetSuggestions(true);
+                            }
+                          }}
+                          placeholder="Straßenname eingeben..."
                           className={errors.street ? "border-red-500" : ""}
+                          autoComplete="off"
                         />
                         {errors.street && <p className="text-red-600 text-sm mt-1">{errors.street}</p>}
+                        
+                        {showStreetSuggestions && streetSuggestions.length > 0 && (
+                          <div className="absolute z-50 w-full mt-1 bg-popover border border-border rounded-md shadow-md max-h-[300px] overflow-hidden">
+                            <Command className="rounded-lg border-none">
+                              <CommandList>
+                                {isLoadingStreets ? (
+                                  <div className="p-4 text-sm text-muted-foreground">Laden...</div>
+                                ) : (
+                                  <CommandGroup>
+                                    {streetSuggestions.map((suggestion, index) => {
+                                      const street = suggestion.address.road || "";
+                                      const city = suggestion.address.city || suggestion.address.town || suggestion.address.village || "";
+                                      
+                                      if (!street) return null;
+                                      
+                                      return (
+                                        <CommandItem
+                                          key={index}
+                                          value={street}
+                                          onSelect={() => handleSelectStreet(suggestion)}
+                                          className="cursor-pointer"
+                                        >
+                                          <div className="flex flex-col">
+                                            <span className="font-medium">{street}</span>
+                                            {city && (
+                                              <span className="text-sm text-muted-foreground">{city}</span>
+                                            )}
+                                          </div>
+                                        </CommandItem>
+                                      );
+                                    })}
+                                  </CommandGroup>
+                                )}
+                              </CommandList>
+                            </Command>
+                          </div>
+                        )}
                       </div>
                       
                       <div>
