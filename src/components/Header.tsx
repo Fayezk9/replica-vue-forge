@@ -10,7 +10,7 @@ import {
 
 export const Header = () => {
   return (
-    <header className="bg-card border-b border-border sticky top-0 z-50 shadow-sm">
+    <header className="bg-card border-b border-border sticky top-0 z-[100] shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center gap-2">
@@ -121,10 +121,10 @@ export const Header = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent">
+                <NavigationMenuTrigger className="bg-transparent hover:bg-accent">
                   Über uns
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-popover">
+                <NavigationMenuContent className="bg-popover z-50">
                   <ul className="grid w-[400px] gap-3 p-4">
                     <li>
                       <NavigationMenuLink asChild>
