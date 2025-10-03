@@ -9,6 +9,17 @@ export const TelcExamDetails = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [certificateDelivery, setCertificateDelivery] = useState("office");
+  const [uploadedCertificate, setUploadedCertificate] = useState<File | null>(null);
+
+  // Check if certificate upload is required
+  const isCertificateUploadRequired = selectedType === "written" || selectedType === "oral";
+  
+  // Check if all required fields are filled
+  const isFormValid = 
+    selectedDate !== "" && 
+    selectedType !== "" && 
+    certificateDelivery !== "" &&
+    (!isCertificateUploadRequired || uploadedCertificate !== null);
 
   const examDates = [
     "25.10.2025",
@@ -148,7 +159,7 @@ export const TelcExamDetails = () => {
               </div>
 
               {/* Only show certificate upload for written or oral exams */}
-              {(selectedType === "written" || selectedType === "oral") && (
+              {isCertificateUploadRequired && (
                 <div>
                   <Label htmlFor="certificate" className="mb-2 block">
                     Prüfungszertifikat hochladen <span className="text-red-500">*</span>
@@ -156,6 +167,8 @@ export const TelcExamDetails = () => {
                   <input
                     type="file"
                     id="certificate"
+                    required
+                    onChange={(e) => setUploadedCertificate(e.target.files?.[0] || null)}
                     className="block w-full text-sm text-muted-foreground
                       file:mr-4 file:py-2 file:px-4
                       file:rounded-md file:border-0
@@ -163,6 +176,9 @@ export const TelcExamDetails = () => {
                       file:bg-primary file:text-primary-foreground
                       hover:file:bg-primary/90"
                   />
+                  {isCertificateUploadRequired && !uploadedCertificate && (
+                    <p className="text-red-500 text-sm mt-1">Bitte laden Sie Ihr Zertifikat hoch</p>
+                  )}
                 </div>
               )}
 
@@ -189,9 +205,19 @@ export const TelcExamDetails = () => {
                 </RadioGroup>
               </div>
 
-              <Button className="w-full bg-purple-600 hover:bg-purple-700" size="lg">
+              <Button 
+                className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed" 
+                size="lg"
+                disabled={!isFormValid}
+              >
                 In den Warenkorb
               </Button>
+              
+              {!isFormValid && (
+                <p className="text-red-500 text-sm text-center">
+                  Bitte füllen Sie alle erforderlichen Felder aus
+                </p>
+              )}
             </CardContent>
           </Card>
         </div>
