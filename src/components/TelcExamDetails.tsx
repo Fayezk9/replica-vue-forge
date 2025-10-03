@@ -1,13 +1,14 @@
 import { Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
 
 export const TelcExamDetails = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedType, setSelectedType] = useState("");
+  const [certificateDelivery, setCertificateDelivery] = useState("office");
 
   const examDates = [
     "25.10.2025",
@@ -105,47 +106,57 @@ export const TelcExamDetails = () => {
           {/* Booking Form */}
           <Card>
             <CardContent className="p-6 space-y-6">
+              {/* Save Configuration Button */}
+              <Button variant="outline" className="w-full border-red-500 text-red-500 hover:bg-red-50">
+                Produktkonfiguration speichern
+              </Button>
+
+              {/* Exam Date Selection - Radio Buttons */}
               <div>
-                <Label htmlFor="exam-date" className="mb-2 block">
-                  Prüfungstermin auswählen *
+                <Label className="mb-3 block">
+                  Prüfungstermin auswählen <span className="text-red-500">*</span>
                 </Label>
-                <Select value={selectedDate} onValueChange={setSelectedDate}>
-                  <SelectTrigger id="exam-date" className="bg-background">
-                    <SelectValue placeholder="Wählen Sie einen Termin" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-popover">
+                <RadioGroup value={selectedDate} onValueChange={setSelectedDate}>
+                  <div className="grid grid-cols-2 gap-3">
                     {examDates.map((date) => (
-                      <SelectItem key={date} value={date}>
-                        {date}
-                      </SelectItem>
+                      <div key={date} className="flex items-center space-x-2">
+                        <RadioGroupItem value={date} id={`date-${date}`} />
+                        <Label htmlFor={`date-${date}`} className="cursor-pointer font-normal">
+                          {date}
+                        </Label>
+                      </div>
                     ))}
-                  </SelectContent>
-                </Select>
+                  </div>
+                </RadioGroup>
               </div>
 
+              {/* Exam Type Selection - Radio Buttons */}
               <div>
-                <Label htmlFor="exam-type" className="mb-2 block">
-                  Prüfungsart auswählen *
+                <Label className="mb-3 block">
+                  Prüfungsart auswählen <span className="text-red-500">*</span>
                 </Label>
-                <Select value={selectedType} onValueChange={setSelectedType}>
-                  <SelectTrigger id="exam-type" className="bg-background">
-                    <SelectValue placeholder="Wählen Sie eine Prüfungsart" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-popover">
+                <RadioGroup value={selectedType} onValueChange={setSelectedType}>
+                  <div className="space-y-2">
                     {examTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label} {type.discount && `${type.discount}`}
-                      </SelectItem>
+                      <div key={type.value} className="flex items-center space-x-2">
+                        <RadioGroupItem value={type.value} id={`type-${type.value}`} />
+                        <Label htmlFor={`type-${type.value}`} className="cursor-pointer font-normal">
+                          {type.label}
+                          {type.discount && (
+                            <span className="text-yellow-600 ml-2">{type.discount}</span>
+                          )}
+                        </Label>
+                      </div>
                     ))}
-                  </SelectContent>
-                </Select>
+                  </div>
+                </RadioGroup>
               </div>
 
               {/* Only show certificate upload for written or oral exams */}
               {(selectedType === "written" || selectedType === "oral") && (
                 <div>
                   <Label htmlFor="certificate" className="mb-2 block">
-                    Prüfungszertifikat hochladen *
+                    Prüfungszertifikat hochladen <span className="text-red-500">*</span>
                   </Label>
                   <input
                     type="file"
@@ -159,8 +170,32 @@ export const TelcExamDetails = () => {
                   />
                 </div>
               )}
-              <Button className="w-full" size="lg">
-                Zur Kasse
+
+              {/* Certificate/Result Delivery Method */}
+              <div>
+                <Label className="mb-3 block">
+                  Zertifikat/Ergebnis <span className="text-red-500">*</span>
+                </Label>
+                <RadioGroup value={certificateDelivery} onValueChange={setCertificateDelivery}>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="office" id="office" />
+                      <Label htmlFor="office" className="cursor-pointer font-normal">
+                        Abholen im Büro
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="post" id="post" />
+                      <Label htmlFor="post" className="cursor-pointer font-normal">
+                        Per Post <span className="text-yellow-600">+ 8,00 €</span>
+                      </Label>
+                    </div>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              <Button className="w-full bg-purple-600 hover:bg-purple-700" size="lg">
+                In den Warenkorb
               </Button>
             </CardContent>
           </Card>
