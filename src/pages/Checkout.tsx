@@ -68,6 +68,7 @@ const Checkout = () => {
     postcode: "",
     city: "",
     phone: "",
+    phoneCountryCode: "+49",
     email: "",
     birthDate: undefined as Date | undefined,
     birthPlace: "",
@@ -387,15 +388,39 @@ const Checkout = () => {
 
                     <div>
                       <Label htmlFor="phone">Telefon <span className="text-red-600">*</span></Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        placeholder="+49 123 456789"
-                        className={errors.phone ? "border-red-500" : ""}
-                      />
+                      <div className="flex gap-2">
+                        <Select
+                          value={formData.phoneCountryCode}
+                          onValueChange={(value) => handleSelectChange("phoneCountryCode", value)}
+                        >
+                          <SelectTrigger className="w-[140px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="+49">🇩🇪 +49</SelectItem>
+                            <SelectItem value="+43">🇦🇹 +43</SelectItem>
+                            <SelectItem value="+41">🇨🇭 +41</SelectItem>
+                            <SelectItem value="+33">🇫🇷 +33</SelectItem>
+                            <SelectItem value="+44">🇬🇧 +44</SelectItem>
+                            <SelectItem value="+39">🇮🇹 +39</SelectItem>
+                            <SelectItem value="+34">🇪🇸 +34</SelectItem>
+                            <SelectItem value="+31">🇳🇱 +31</SelectItem>
+                            <SelectItem value="+32">🇧🇪 +32</SelectItem>
+                            <SelectItem value="+48">🇵🇱 +48</SelectItem>
+                            <SelectItem value="+1">🇺🇸 +1</SelectItem>
+                            <SelectItem value="+90">🇹🇷 +90</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          placeholder="123 456789"
+                          className={cn("flex-1", errors.phone ? "border-red-500" : "")}
+                        />
+                      </div>
                       {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone}</p>}
                     </div>
 
