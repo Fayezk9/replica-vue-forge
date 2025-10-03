@@ -4,8 +4,9 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import telcExamStudent from "@/assets/telc-exam-student.jpg";
+import postDeliveryIcon from "@/assets/post-delivery-icon.jpg";
 
 interface CartItem {
   id: string;
@@ -20,18 +21,36 @@ interface CartItem {
 const Cart = () => {
   const navigate = useNavigate();
   
-  // Sample cart data - in a real app, this would come from state management
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: "1",
-      name: "telc B1 Prüfung (allgemein)",
-      examDate: "25.10.2025",
-      examType: "Gesamtprüfung",
-      certificateDelivery: "Abholen im Büro",
-      price: 179.00,
-      image: telcExamStudent
+  // Load cart data from localStorage
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cartData");
+    if (savedCart) {
+      const cartData = JSON.parse(savedCart);
+      const items: CartItem[] = [
+        {
+          ...cartData.examItem,
+          image: telcExamStudent
+        }
+      ];
+      
+      // Add postal delivery item if selected
+      if (cartData.includePostal) {
+        items.push({
+          id: "postal-" + Date.now(),
+          name: "Per Post",
+          examDate: "",
+          examType: "",
+          certificateDelivery: "",
+          price: 8.00,
+          image: postDeliveryIcon
+        });
+      }
+      
+      setCartItems(items);
     }
-  ]);
+  }, []);
 
   const removeItem = (id: string) => {
     setCartItems(cartItems.filter(item => item.id !== id));
@@ -112,15 +131,21 @@ const Cart = () => {
                           <p className="font-semibold text-primary hover:underline cursor-pointer">
                             {item.name}
                           </p>
-                          <p className="text-sm text-muted-foreground">
-                            Prüfungstermin auswählen: {item.examDate}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Prüfungsart auswählen: {item.examType}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Zertifikat/Ergebnis: {item.certificateDelivery}
-                          </p>
+                          {item.examDate && (
+                            <p className="text-sm text-muted-foreground">
+                              Prüfungstermin auswählen: {item.examDate}
+                            </p>
+                          )}
+                          {item.examType && (
+                            <p className="text-sm text-muted-foreground">
+                              Prüfungsart auswählen: {item.examType}
+                            </p>
+                          )}
+                          {item.certificateDelivery && (
+                            <p className="text-sm text-muted-foreground">
+                              Zertifikat/Ergebnis: {item.certificateDelivery}
+                            </p>
+                          )}
                         </div>
                       </td>
                       <td className="border border-border p-4">

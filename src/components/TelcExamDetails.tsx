@@ -211,7 +211,26 @@ export const TelcExamDetails = () => {
                 className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed" 
                 size="lg"
                 disabled={!isFormValid}
-                onClick={() => navigate("/warenkorb")}
+                onClick={() => {
+                  // Save cart data to localStorage
+                  const examTypeLabel = examTypes.find(t => t.value === selectedType)?.label || selectedType;
+                  const deliveryLabel = certificateDelivery === "office" ? "Abholen im Büro" : "Per Post";
+                  
+                  const cartData = {
+                    examItem: {
+                      id: "exam-" + Date.now(),
+                      name: "telc B1 Prüfung (allgemein)",
+                      examDate: selectedDate,
+                      examType: examTypeLabel,
+                      certificateDelivery: deliveryLabel,
+                      price: 179.00,
+                    },
+                    includePostal: certificateDelivery === "post"
+                  };
+                  
+                  localStorage.setItem("cartData", JSON.stringify(cartData));
+                  navigate("/warenkorb");
+                }}
               >
                 In den Warenkorb
               </Button>
