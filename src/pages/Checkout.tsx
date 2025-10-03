@@ -393,22 +393,36 @@ const Checkout = () => {
                           value={formData.phoneCountryCode}
                           onValueChange={(value) => handleSelectChange("phoneCountryCode", value)}
                         >
-                          <SelectTrigger className="w-[140px]">
+                          <SelectTrigger className="w-[120px] font-medium">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="+49">🇩🇪 +49</SelectItem>
-                            <SelectItem value="+43">🇦🇹 +43</SelectItem>
-                            <SelectItem value="+41">🇨🇭 +41</SelectItem>
-                            <SelectItem value="+33">🇫🇷 +33</SelectItem>
-                            <SelectItem value="+44">🇬🇧 +44</SelectItem>
-                            <SelectItem value="+39">🇮🇹 +39</SelectItem>
-                            <SelectItem value="+34">🇪🇸 +34</SelectItem>
-                            <SelectItem value="+31">🇳🇱 +31</SelectItem>
-                            <SelectItem value="+32">🇧🇪 +32</SelectItem>
-                            <SelectItem value="+48">🇵🇱 +48</SelectItem>
-                            <SelectItem value="+1">🇺🇸 +1</SelectItem>
-                            <SelectItem value="+90">🇹🇷 +90</SelectItem>
+                          <SelectContent className="max-h-[300px]">
+                            <SelectItem value="+49" className="font-medium">🇩🇪 +49</SelectItem>
+                            <SelectItem value="+43" className="font-medium">🇦🇹 +43</SelectItem>
+                            <SelectItem value="+41" className="font-medium">🇨🇭 +41</SelectItem>
+                            <SelectItem value="+33" className="font-medium">🇫🇷 +33</SelectItem>
+                            <SelectItem value="+44" className="font-medium">🇬🇧 +44</SelectItem>
+                            <SelectItem value="+39" className="font-medium">🇮🇹 +39</SelectItem>
+                            <SelectItem value="+34" className="font-medium">🇪🇸 +34</SelectItem>
+                            <SelectItem value="+31" className="font-medium">🇳🇱 +31</SelectItem>
+                            <SelectItem value="+32" className="font-medium">🇧🇪 +32</SelectItem>
+                            <SelectItem value="+48" className="font-medium">🇵🇱 +48</SelectItem>
+                            <SelectItem value="+90" className="font-medium">🇹🇷 +90</SelectItem>
+                            <SelectItem value="+1" className="font-medium">🇺🇸 +1</SelectItem>
+                            <SelectItem value="+7" className="font-medium">🇷🇺 +7</SelectItem>
+                            <SelectItem value="+86" className="font-medium">🇨🇳 +86</SelectItem>
+                            <SelectItem value="+91" className="font-medium">🇮🇳 +91</SelectItem>
+                            <SelectItem value="+81" className="font-medium">🇯🇵 +81</SelectItem>
+                            <SelectItem value="+82" className="font-medium">🇰🇷 +82</SelectItem>
+                            <SelectItem value="+55" className="font-medium">🇧🇷 +55</SelectItem>
+                            <SelectItem value="+52" className="font-medium">🇲🇽 +52</SelectItem>
+                            <SelectItem value="+61" className="font-medium">🇦🇺 +61</SelectItem>
+                            <SelectItem value="+64" className="font-medium">🇳🇿 +64</SelectItem>
+                            <SelectItem value="+27" className="font-medium">🇿🇦 +27</SelectItem>
+                            <SelectItem value="+20" className="font-medium">🇪🇬 +20</SelectItem>
+                            <SelectItem value="+234" className="font-medium">🇳🇬 +234</SelectItem>
+                            <SelectItem value="+971" className="font-medium">🇦🇪 +971</SelectItem>
+                            <SelectItem value="+966" className="font-medium">🇸🇦 +966</SelectItem>
                           </SelectContent>
                         </Select>
                         <Input
