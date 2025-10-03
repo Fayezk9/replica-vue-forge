@@ -37,7 +37,12 @@ const checkoutSchema = z.object({
   gender: z.enum(["Herr", "Frau", "Divers"], { required_error: "Anrede ist erforderlich" }),
   firstName: z.string().min(1, "Vorname ist erforderlich").max(100),
   lastName: z.string().min(1, "Nachname ist erforderlich").max(100),
-  street: z.string().min(1, "Straße ist erforderlich").max(200),
+  street: z.string()
+    .min(1, "Straße ist erforderlich")
+    .max(200)
+    .refine((val) => !/\d/.test(val), {
+      message: "Bitte geben Sie nur den Straßennamen ein, keine Hausnummer"
+    }),
   houseNumber: z.string().min(1, "Hausnummer ist erforderlich").max(20),
   postcode: z.string().min(1, "Postleitzahl ist erforderlich").max(10),
   city: z.string().min(1, "Stadt ist erforderlich").max(100),
@@ -46,8 +51,8 @@ const checkoutSchema = z.object({
   birthDate: z.date({ required_error: "Geburtsdatum ist erforderlich" }),
   birthPlace: z.string().min(1, "Geburtsort ist erforderlich").max(100),
   birthCountry: z.string().min(1, "Geburtsland ist erforderlich").max(100),
-  motherTongue: z.string().max(100).optional(),
-  orderNotes: z.string().max(1000).optional(),
+  motherTongue: z.string().min(1, "Muttersprache ist erforderlich").max(100),
+  orderNotes: z.string().min(1, "Bestellnotizen ist erforderlich").max(1000),
 });
 
 const Checkout = () => {
@@ -161,7 +166,11 @@ const Checkout = () => {
 
   const handleStreetInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Remove any numbers from street input
+    const cleanValue = value.replace(/\d/g, '');
+    
+    setFormData(prev => ({ ...prev, [name]: cleanValue }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
@@ -171,7 +180,7 @@ const Checkout = () => {
     }
 
     debounceTimerRef.current = setTimeout(() => {
-      fetchStreetSuggestions(value);
+      fetchStreetSuggestions(cleanValue);
     }, 300);
   };
 
@@ -466,13 +475,15 @@ const Checkout = () => {
                     </div>
 
                     <div>
-                      <Label htmlFor="motherTongue">Muttersprache (optional)</Label>
+                      <Label htmlFor="motherTongue">Muttersprache <span className="text-red-600">*</span></Label>
                       <Input
                         id="motherTongue"
                         name="motherTongue"
                         value={formData.motherTongue}
                         onChange={handleInputChange}
+                        className={errors.motherTongue ? "border-red-500" : ""}
                       />
+                      {errors.motherTongue && <p className="text-red-600 text-sm mt-1">{errors.motherTongue}</p>}
                     </div>
                   </div>
                 </div>
@@ -482,7 +493,7 @@ const Checkout = () => {
                   <h2 className="font-serif text-xl md:text-2xl font-bold mb-4 md:mb-6">Zusätzliche Informationen</h2>
                   
                   <div>
-                    <Label htmlFor="orderNotes">Bestellnotizen (optional)</Label>
+                    <Label htmlFor="orderNotes">Bestellnotizen <span className="text-red-600">*</span></Label>
                     <Textarea
                       id="orderNotes"
                       name="orderNotes"
@@ -490,7 +501,9 @@ const Checkout = () => {
                       onChange={handleInputChange}
                       placeholder="Anmerkungen zu deiner Bestellung, z.B. besondere Hinweise für die Lieferung."
                       rows={4}
+                      className={errors.orderNotes ? "border-red-500" : ""}
                     />
+                    {errors.orderNotes && <p className="text-red-600 text-sm mt-1">{errors.orderNotes}</p>}
                   </div>
                 </div>
 
