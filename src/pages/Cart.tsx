@@ -64,10 +64,10 @@ const Cart = () => {
       <div className="min-h-screen bg-background">
         <TopBar />
         <Header />
-        <main className="py-12">
+        <main className="py-6 md:py-12">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              <h1 className="font-serif text-3xl md:text-4xl font-bold mb-8">Warenkorb</h1>
+              <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-8">Warenkorb</h1>
               <div className="bg-blue-50 border border-blue-200 rounded-md p-6 text-center">
                 <p className="text-muted-foreground">Dein Warenkorb ist gegenwärtig leer.</p>
                 <Button 
@@ -89,13 +89,13 @@ const Cart = () => {
     <div className="min-h-screen bg-background">
       <TopBar />
       <Header />
-      <main className="py-12">
+      <main className="py-6 md:py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <h1 className="font-serif text-3xl md:text-4xl font-bold mb-8">Warenkorb</h1>
+            <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-8">Warenkorb</h1>
             
-            {/* Cart Table */}
-            <div className="overflow-x-auto mb-8">
+            {/* Desktop Table View - Hidden on Mobile */}
+            <div className="hidden md:block overflow-x-auto mb-8">
               <table className="w-full border-collapse border border-border">
                 <thead>
                   <tr className="bg-muted/50">
@@ -163,9 +163,58 @@ const Cart = () => {
               </table>
             </div>
 
+            {/* Mobile Card View - Hidden on Desktop */}
+            <div className="md:hidden space-y-4 mb-6">
+              {cartItems.map((item) => (
+                <div key={item.id} className="border border-border rounded-lg p-4">
+                  <div className="flex gap-4 mb-3">
+                    <img 
+                      src={item.image} 
+                      alt={item.name}
+                      className="w-20 h-20 object-cover rounded flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-primary mb-2 break-words">
+                        {item.name}
+                      </h3>
+                      <p className="text-lg font-bold text-foreground">
+                        {item.price.toFixed(2)} €
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      className="text-red-600 hover:text-red-700 self-start"
+                      aria-label="Artikel entfernen"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                  
+                  {(item.examDate || item.examType || item.certificateDelivery) && (
+                    <div className="space-y-1 text-sm text-muted-foreground border-t border-border pt-3">
+                      {item.examDate && (
+                        <p>Prüfungstermin: {item.examDate}</p>
+                      )}
+                      {item.examType && (
+                        <p>Prüfungsart: {item.examType}</p>
+                      )}
+                      {item.certificateDelivery && (
+                        <p>Zertifikat/Ergebnis: {item.certificateDelivery}</p>
+                      )}
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-between items-center mt-3 pt-3 border-t border-border">
+                    <span className="text-sm text-muted-foreground">Anzahl: 1</span>
+                    <span className="font-semibold">Summe: {item.price.toFixed(2)} €</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             {/* Update Cart Button */}
-            <div className="mb-12">
-              <Button variant="secondary" disabled>
+            <div className="mb-8 md:mb-12">
+              <Button variant="secondary" disabled className="w-full md:w-auto">
                 Warenkorb aktualisieren
               </Button>
             </div>
@@ -173,21 +222,21 @@ const Cart = () => {
             {/* Cart Summary */}
             <div className="flex justify-end">
               <div className="w-full md:w-2/5">
-                <h2 className="font-serif text-2xl font-bold mb-6">Warenkorb-Summe</h2>
+                <h2 className="font-serif text-xl md:text-2xl font-bold mb-4 md:mb-6">Warenkorb-Summe</h2>
                 
                 <div className="border border-border">
-                  <div className="flex justify-between p-4 border-b border-border">
+                  <div className="flex justify-between p-3 md:p-4 border-b border-border">
                     <span className="font-semibold">Zwischensumme</span>
                     <span className="font-semibold">{subtotal.toFixed(2)} €</span>
                   </div>
-                  <div className="flex justify-between p-4">
+                  <div className="flex justify-between p-3 md:p-4">
                     <span className="font-bold">Gesamtsumme</span>
                     <span className="font-bold">{total.toFixed(2)} €</span>
                   </div>
                 </div>
 
                 <Button 
-                  className="w-full mt-6 bg-purple-600 hover:bg-purple-700 text-lg py-6"
+                  className="w-full mt-4 md:mt-6 bg-purple-600 hover:bg-purple-700 text-base md:text-lg py-5 md:py-6"
                   onClick={() => navigate("/checkout")}
                 >
                   Weiter zur Kasse
