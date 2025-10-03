@@ -34,7 +34,9 @@ interface StreetSuggestion {
 }
 
 const checkoutSchema = z.object({
-  gender: z.enum(["Herr", "Frau", "Divers"], { required_error: "Anrede ist erforderlich" }),
+  gender: z.enum(["Herr", "Frau", "Divers"], { 
+    errorMap: () => ({ message: "Bitte wählen" })
+  }),
   firstName: z.string().min(1, "Vorname ist erforderlich").max(100),
   lastName: z.string().min(1, "Nachname ist erforderlich").max(100),
   street: z.string()
