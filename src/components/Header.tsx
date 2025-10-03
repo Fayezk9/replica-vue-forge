@@ -53,17 +53,34 @@ export const Header = () => {
                   telc Prüfungen
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="bg-popover">
-                  <ul className="grid w-[400px] gap-3 p-4">
+                  <ul className="grid w-[300px] gap-0 p-0">
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="#telc"
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          href="#telc-b1"
                         >
-                          <div className="text-sm font-medium leading-none">telc-Prüfungen</div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Anerkanntes Sprachzertifikat
-                          </p>
+                          telc B1 Prüfung (allgemein)
+                        </a>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <a
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          href="#telc-b2"
+                        >
+                          telc B2 Prüfung (allgemein)
+                        </a>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <a
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          href="#telc-c1"
+                        >
+                          telc C1 Hochschule Prüfung
                         </a>
                       </NavigationMenuLink>
                     </li>
