@@ -277,6 +277,7 @@ const Checkout = () => {
                           name="firstName"
                           value={formData.firstName}
                           onChange={handleInputChange}
+                          placeholder="Vorname eingeben..."
                           className={errors.firstName ? "border-red-500" : ""}
                         />
                         {errors.firstName && <p className="text-red-600 text-sm mt-1">{errors.firstName}</p>}
@@ -289,6 +290,7 @@ const Checkout = () => {
                           name="lastName"
                           value={formData.lastName}
                           onChange={handleInputChange}
+                          placeholder="Nachname eingeben..."
                           className={errors.lastName ? "border-red-500" : ""}
                         />
                         {errors.lastName && <p className="text-red-600 text-sm mt-1">{errors.lastName}</p>}
@@ -348,6 +350,7 @@ const Checkout = () => {
                           name="houseNumber"
                           value={formData.houseNumber}
                           onChange={handleInputChange}
+                          placeholder="z.B. 123"
                           className={errors.houseNumber ? "border-red-500" : ""}
                         />
                         {errors.houseNumber && <p className="text-red-600 text-sm mt-1">{errors.houseNumber}</p>}
@@ -362,6 +365,7 @@ const Checkout = () => {
                           name="postcode"
                           value={formData.postcode}
                           onChange={handleInputChange}
+                          placeholder="z.B. 44137"
                           className={errors.postcode ? "border-red-500" : ""}
                         />
                         {errors.postcode && <p className="text-red-600 text-sm mt-1">{errors.postcode}</p>}
@@ -374,6 +378,7 @@ const Checkout = () => {
                           name="city"
                           value={formData.city}
                           onChange={handleInputChange}
+                          placeholder="z.B. Dortmund"
                           className={errors.city ? "border-red-500" : ""}
                         />
                         {errors.city && <p className="text-red-600 text-sm mt-1">{errors.city}</p>}
@@ -388,6 +393,7 @@ const Checkout = () => {
                         type="tel"
                         value={formData.phone}
                         onChange={handleInputChange}
+                        placeholder="+49 123 456789"
                         className={errors.phone ? "border-red-500" : ""}
                       />
                       {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone}</p>}
@@ -401,6 +407,7 @@ const Checkout = () => {
                         type="email"
                         value={formData.email}
                         onChange={handleInputChange}
+                        placeholder="beispiel@email.de"
                         className={errors.email ? "border-red-500" : ""}
                       />
                       {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
@@ -485,6 +492,7 @@ const Checkout = () => {
                         name="motherTongue"
                         value={formData.motherTongue}
                         onChange={handleInputChange}
+                        placeholder="z.B. Deutsch"
                         className={errors.motherTongue ? "border-red-500" : ""}
                       />
                       {errors.motherTongue && <p className="text-red-600 text-sm mt-1">{errors.motherTongue}</p>}
