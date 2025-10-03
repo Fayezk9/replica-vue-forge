@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -20,9 +21,9 @@ interface CartItem {
 }
 
 const checkoutSchema = z.object({
+  gender: z.enum(["Herr", "Frau", "Divers"], { required_error: "Anrede ist erforderlich" }),
   firstName: z.string().min(1, "Vorname ist erforderlich").max(100),
   lastName: z.string().min(1, "Nachname ist erforderlich").max(100),
-  company: z.string().max(100).optional(),
   street: z.string().min(1, "Straße und Hausnummer ist erforderlich").max(200),
   postcode: z.string().min(1, "Postleitzahl ist erforderlich").max(10),
   city: z.string().min(1, "Stadt ist erforderlich").max(100),
@@ -36,9 +37,9 @@ const Checkout = () => {
   const { toast } = useToast();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [formData, setFormData] = useState({
+    gender: "",
     firstName: "",
     lastName: "",
-    company: "",
     street: "",
     postcode: "",
     city: "",
@@ -73,6 +74,13 @@ const Checkout = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
@@ -129,6 +137,24 @@ const Checkout = () => {
                   <h2 className="font-serif text-xl md:text-2xl font-bold mb-4 md:mb-6">Rechnungsdetails</h2>
                   
                   <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="gender">Anrede <span className="text-red-600">*</span></Label>
+                      <Select
+                        value={formData.gender}
+                        onValueChange={(value) => handleSelectChange("gender", value)}
+                      >
+                        <SelectTrigger className={errors.gender ? "border-red-500" : ""}>
+                          <SelectValue placeholder="Bitte wählen" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Herr">Herr</SelectItem>
+                          <SelectItem value="Frau">Frau</SelectItem>
+                          <SelectItem value="Divers">Divers</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {errors.gender && <p className="text-red-600 text-sm mt-1">{errors.gender}</p>}
+                    </div>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="firstName">Vorname <span className="text-red-600">*</span></Label>
@@ -153,16 +179,6 @@ const Checkout = () => {
                         />
                         {errors.lastName && <p className="text-red-600 text-sm mt-1">{errors.lastName}</p>}
                       </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="company">Firmenname (optional)</Label>
-                      <Input
-                        id="company"
-                        name="company"
-                        value={formData.company}
-                        onChange={handleInputChange}
-                      />
                     </div>
 
                     <div>
