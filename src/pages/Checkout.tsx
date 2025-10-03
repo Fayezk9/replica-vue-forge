@@ -24,7 +24,8 @@ const checkoutSchema = z.object({
   gender: z.enum(["Herr", "Frau", "Divers"], { required_error: "Anrede ist erforderlich" }),
   firstName: z.string().min(1, "Vorname ist erforderlich").max(100),
   lastName: z.string().min(1, "Nachname ist erforderlich").max(100),
-  street: z.string().min(1, "Straße und Hausnummer ist erforderlich").max(200),
+  street: z.string().min(1, "Straße ist erforderlich").max(200),
+  houseNumber: z.string().min(1, "Hausnummer ist erforderlich").max(20),
   postcode: z.string().min(1, "Postleitzahl ist erforderlich").max(10),
   city: z.string().min(1, "Stadt ist erforderlich").max(100),
   phone: z.string().min(1, "Telefon ist erforderlich").max(30),
@@ -41,6 +42,7 @@ const Checkout = () => {
     firstName: "",
     lastName: "",
     street: "",
+    houseNumber: "",
     postcode: "",
     city: "",
     phone: "",
@@ -181,16 +183,30 @@ const Checkout = () => {
                       </div>
                     </div>
 
-                    <div>
-                      <Label htmlFor="street">Straße und Hausnummer <span className="text-red-600">*</span></Label>
-                      <Input
-                        id="street"
-                        name="street"
-                        value={formData.street}
-                        onChange={handleInputChange}
-                        className={errors.street ? "border-red-500" : ""}
-                      />
-                      {errors.street && <p className="text-red-600 text-sm mt-1">{errors.street}</p>}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="street">Straße <span className="text-red-600">*</span></Label>
+                        <Input
+                          id="street"
+                          name="street"
+                          value={formData.street}
+                          onChange={handleInputChange}
+                          className={errors.street ? "border-red-500" : ""}
+                        />
+                        {errors.street && <p className="text-red-600 text-sm mt-1">{errors.street}</p>}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="houseNumber">Hausnummer <span className="text-red-600">*</span></Label>
+                        <Input
+                          id="houseNumber"
+                          name="houseNumber"
+                          value={formData.houseNumber}
+                          onChange={handleInputChange}
+                          className={errors.houseNumber ? "border-red-500" : ""}
+                        />
+                        {errors.houseNumber && <p className="text-red-600 text-sm mt-1">{errors.houseNumber}</p>}
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
