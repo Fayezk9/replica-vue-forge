@@ -61,14 +61,15 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
                 handleChange(value);
               }}
             >
-              <SelectTrigger className="pr-1.5 focus:ring-0 h-7">
+              <SelectTrigger className="pr-1.5 focus:ring-0 h-8 border-none bg-muted/50 hover:bg-muted font-semibold transition-colors">
                 <SelectValue>{selected?.props?.children}</SelectValue>
               </SelectTrigger>
-              <SelectContent position="popper" className="max-h-[200px] overflow-y-auto">
+              <SelectContent position="popper" className="max-h-[280px] overflow-y-auto bg-popover border-2 border-primary/20">
                 {options.map((option, id: number) => (
                   <SelectItem
                     key={`${option.props.value}-${id}`}
                     value={option.props.value?.toString() ?? ""}
+                    className="cursor-pointer hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground"
                   >
                     {option.props.children}
                   </SelectItem>
