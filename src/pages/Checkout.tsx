@@ -224,6 +224,25 @@ const Checkout = () => {
           }
         });
         setErrors(newErrors);
+        
+        // Scroll to first error field
+        const firstErrorField = error.errors[0]?.path[0] as string;
+        if (firstErrorField) {
+          // Use setTimeout to ensure the error state is set before scrolling
+          setTimeout(() => {
+            const element = document.getElementById(firstErrorField) || 
+                          document.querySelector(`[name="${firstErrorField}"]`);
+            if (element) {
+              element.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+              });
+              // Focus the field
+              element.focus();
+            }
+          }, 100);
+        }
+        
         toast({
           title: "Fehler",
           description: "Bitte füllen Sie alle erforderlichen Felder aus.",
