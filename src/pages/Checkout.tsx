@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface CartItem {
@@ -101,6 +101,20 @@ const Checkout = () => {
       setCartItems(items);
     } else {
       navigate("/warenkorb");
+    }
+
+    // Load saved draft if exists
+    const savedDraft = localStorage.getItem("checkoutDraft");
+    if (savedDraft) {
+      try {
+        const draft = JSON.parse(savedDraft);
+        if (draft.birthDate) {
+          draft.birthDate = new Date(draft.birthDate);
+        }
+        setFormData(draft);
+      } catch (error) {
+        console.error("Error loading draft:", error);
+      }
     }
   }, [navigate]);
 
@@ -231,6 +245,14 @@ const Checkout = () => {
     }
   };
 
+  const handleSaveDraft = () => {
+    localStorage.setItem("checkoutDraft", JSON.stringify(formData));
+    toast({
+      title: "Entwurf gespeichert",
+      description: "Ihre Daten wurden lokal gespeichert.",
+    });
+  };
+
   const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const total = subtotal;
 
@@ -241,7 +263,19 @@ const Checkout = () => {
       <main className="py-6 md:py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-8">Kasse</h1>
+            <div className="flex items-center justify-between mb-6 md:mb-8">
+              <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold">Kasse</h1>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleSaveDraft}
+                className="flex items-center gap-2"
+              >
+                <Save className="h-4 w-4" />
+                <span className="hidden sm:inline">Entwurf speichern</span>
+              </Button>
+            </div>
             
             <form onSubmit={handleSubmit}>
               <div className="space-y-8">
