@@ -27,15 +27,11 @@ interface CartItem {
   price: number;
 }
 
-interface AddressSuggestion {
-  display_name: string;
-  address: {
-    road?: string;
-    city?: string;
-    town?: string;
-    village?: string;
-    postcode?: string;
-  };
+interface StreetSuggestion {
+  name: string;
+  postalCode: string;
+  locality: string;
+  borough?: string;
 }
 
 const checkoutSchema = z.object({
@@ -76,7 +72,7 @@ const Checkout = () => {
     orderNotes: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [streetSuggestions, setStreetSuggestions] = useState<AddressSuggestion[]>([]);
+  const [streetSuggestions, setStreetSuggestions] = useState<StreetSuggestion[]>([]);
   const [showStreetSuggestions, setShowStreetSuggestions] = useState(false);
   const [isLoadingStreets, setIsLoadingStreets] = useState(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -135,12 +131,7 @@ const Checkout = () => {
     setIsLoadingStreets(true);
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?` +
-        `street=${encodeURIComponent(query)}&` +
-        `country=Germany&` +
-        `format=json&` +
-        `addressdetails=1&` +
-        `limit=10`,
+        `https://openplzapi.org/de/Streets?name=^${encodeURIComponent(query)}&pageSize=20`,
         {
           headers: {
             'Accept': 'application/json',
@@ -149,10 +140,21 @@ const Checkout = () => {
       );
       
       const data = await response.json();
-      setStreetSuggestions(data);
+      
+      // Filter out duplicates based on street name + locality
+      const uniqueStreets = new Map<string, StreetSuggestion>();
+      data.forEach((street: StreetSuggestion) => {
+        const key = `${street.name}-${street.locality}`;
+        if (!uniqueStreets.has(key)) {
+          uniqueStreets.set(key, street);
+        }
+      });
+      
+      setStreetSuggestions(Array.from(uniqueStreets.values()));
       setShowStreetSuggestions(true);
     } catch (error) {
       console.error("Error fetching street suggestions:", error);
+      setStreetSuggestions([]);
     } finally {
       setIsLoadingStreets(false);
     }
@@ -174,16 +176,12 @@ const Checkout = () => {
     }, 300);
   };
 
-  const handleSelectStreet = (suggestion: AddressSuggestion) => {
-    const street = suggestion.address.road || "";
-    const city = suggestion.address.city || suggestion.address.town || suggestion.address.village || "";
-    const postcode = suggestion.address.postcode || "";
-
+  const handleSelectStreet = (suggestion: StreetSuggestion) => {
     setFormData(prev => ({
       ...prev,
-      street,
-      city,
-      postcode
+      street: suggestion.name,
+      city: suggestion.locality,
+      postcode: suggestion.postalCode
     }));
     
     setShowStreetSuggestions(false);
@@ -315,28 +313,22 @@ const Checkout = () => {
                                   <div className="p-4 text-sm text-muted-foreground">Laden...</div>
                                 ) : (
                                   <CommandGroup>
-                                    {streetSuggestions.map((suggestion, index) => {
-                                      const street = suggestion.address.road || "";
-                                      const city = suggestion.address.city || suggestion.address.town || suggestion.address.village || "";
-                                      
-                                      if (!street) return null;
-                                      
-                                      return (
-                                        <CommandItem
-                                          key={index}
-                                          value={street}
-                                          onSelect={() => handleSelectStreet(suggestion)}
-                                          className="cursor-pointer"
-                                        >
-                                          <div className="flex flex-col">
-                                            <span className="font-medium">{street}</span>
-                                            {city && (
-                                              <span className="text-sm text-muted-foreground">{city}</span>
-                                            )}
-                                          </div>
-                                        </CommandItem>
-                                      );
-                                    })}
+                                    {streetSuggestions.map((suggestion, index) => (
+                                      <CommandItem
+                                        key={`${suggestion.name}-${suggestion.locality}-${index}`}
+                                        value={suggestion.name}
+                                        onSelect={() => handleSelectStreet(suggestion)}
+                                        className="cursor-pointer"
+                                      >
+                                        <div className="flex flex-col">
+                                          <span className="font-medium">{suggestion.name}</span>
+                                          <span className="text-sm text-muted-foreground">
+                                            {suggestion.postalCode} {suggestion.locality}
+                                            {suggestion.borough && ` (${suggestion.borough})`}
+                                          </span>
+                                        </div>
+                                      </CommandItem>
+                                    ))}
                                   </CommandGroup>
                                 )}
                               </CommandList>
