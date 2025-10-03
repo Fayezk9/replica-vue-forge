@@ -79,6 +79,7 @@ const Checkout = () => {
   const [streetSuggestions, setStreetSuggestions] = useState<StreetSuggestion[]>([]);
   const [showStreetSuggestions, setShowStreetSuggestions] = useState(false);
   const [isLoadingStreets, setIsLoadingStreets] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -414,7 +415,7 @@ const Checkout = () => {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="birthDate">Geburtsdatum <span className="text-red-600">*</span></Label>
-                      <Popover>
+                      <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
@@ -438,8 +439,7 @@ const Checkout = () => {
                             selected={formData.birthDate}
                             onSelect={(date) => {
                               handleDateChange(date);
-                              // Close popover by clicking outside
-                              document.body.click();
+                              setCalendarOpen(false);
                             }}
                             disabled={(date) =>
                               date > new Date() || date < new Date("1900-01-01")
