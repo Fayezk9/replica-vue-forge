@@ -54,7 +54,7 @@ const checkoutSchema = z.object({
   birthPlace: z.string().min(1, "Geburtsort ist erforderlich").max(100),
   birthCountry: z.string().min(1, "Geburtsland ist erforderlich").max(100),
   motherTongue: z.string().min(1, "Muttersprache ist erforderlich").max(100),
-  orderNotes: z.string().min(1, "Bestellnotizen ist erforderlich").max(1000),
+  orderNotes: z.string().max(1000).optional(),
 });
 
 const Checkout = () => {
@@ -270,8 +270,7 @@ const Checkout = () => {
     formData.birthDate !== undefined &&
     formData.birthPlace.trim() !== "" &&
     formData.birthCountry.trim() !== "" &&
-    formData.motherTongue.trim() !== "" &&
-    formData.orderNotes.trim() !== "";
+    formData.motherTongue.trim() !== "";
 
   return (
     <div className="min-h-screen bg-background">
@@ -581,7 +580,7 @@ const Checkout = () => {
                   <h2 className="font-serif text-xl md:text-2xl font-bold mb-4 md:mb-6">Zusätzliche Informationen</h2>
                   
                   <div>
-                    <Label htmlFor="orderNotes">Bestellnotizen <span className="text-red-600">*</span></Label>
+                    <Label htmlFor="orderNotes">Bestellnotizen (optional)</Label>
                     <Textarea
                       id="orderNotes"
                       name="orderNotes"
