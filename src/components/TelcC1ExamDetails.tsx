@@ -29,7 +29,7 @@ export const TelcC1ExamDetails = () => {
   ];
 
   const examTypes = [
-    { value: "full", label: "Gesamtprüfung", price: "190,00 €" },
+    { value: "full", label: "Gesamtprüfung", price: "189,00 €" },
     { value: "written", label: "schriftlich", discount: "- 10,00 %" },
     { value: "oral", label: "mündlich", discount: "- 10,00 %" }
   ];
@@ -48,7 +48,7 @@ export const TelcC1ExamDetails = () => {
             <h2 className="font-serif text-3xl md:text-4xl font-bold">
               telc C1 Hochschule Prüfung
             </h2>
-            <p className="text-3xl font-bold">190,00 €</p>
+            <p className="text-3xl font-bold">189,00 €</p>
           </div>
 
           {/* Information List */}
@@ -221,7 +221,7 @@ export const TelcC1ExamDetails = () => {
                       examDate: selectedDate,
                       examType: examTypeLabel,
                       certificateDelivery: deliveryLabel,
-                      price: 190.00,
+                      price: 189.00,
                     },
                     includePostal: certificateDelivery === "post"
                   };
