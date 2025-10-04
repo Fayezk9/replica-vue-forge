@@ -658,13 +658,27 @@ const Checkout = () => {
                     </p>
                   </div>
 
-                  <Button 
-                    type="submit"
-                    disabled={!isFormValid}
-                    className="w-full mt-6 bg-purple-600 hover:bg-purple-700 text-base md:text-lg py-5 md:py-6 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Zahlungspflichtig bestellen
-                  </Button>
+                  <div className="relative">
+                    <Button 
+                      type="submit"
+                      disabled={!isFormValid}
+                      className="w-full mt-6 bg-purple-600 hover:bg-purple-700 text-base md:text-lg py-5 md:py-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Zahlungspflichtig bestellen
+                    </Button>
+                    {!isFormValid && (
+                      <div
+                        onClick={() => {
+                          toast({
+                            title: "Formular unvollständig",
+                            description: "Bitte füllen Sie alle erforderlichen Felder aus, bevor Sie fortfahren.",
+                            variant: "destructive",
+                          });
+                        }}
+                        className="absolute inset-0 cursor-pointer"
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </form>
