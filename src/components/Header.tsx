@@ -78,7 +78,7 @@ export const Header = () => {
                       <NavigationMenuLink asChild>
                         <a
                           className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="#telc-c1"
+                          href="/telc-c1"
                         >
                           telc C1 Hochschule Prüfung
                         </a>
