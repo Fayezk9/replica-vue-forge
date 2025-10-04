@@ -24,8 +24,10 @@ export const TelcC1ExamDetails = () => {
     (!isCertificateUploadRequired || uploadedCertificate !== null);
 
   const examDates = [
-    "08.11.2025",
-    "06.12.2025"
+    "11.10.2025",
+    "15.11.2025",
+    "29.11.2025",
+    "13.12.2025"
   ];
 
   const examTypes = [
