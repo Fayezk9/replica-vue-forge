@@ -12,6 +12,7 @@ export const TelcB2ExamDetails = () => {
   const [selectedType, setSelectedType] = useState("");
   const [certificateDelivery, setCertificateDelivery] = useState("office");
   const [uploadedCertificate, setUploadedCertificate] = useState<File | null>(null);
+  const [uploadedIdPhoto, setUploadedIdPhoto] = useState<File | null>(null);
 
   // Check if certificate upload is required
   const isCertificateUploadRequired = selectedType === "written" || selectedType === "oral";
@@ -21,6 +22,7 @@ export const TelcB2ExamDetails = () => {
     selectedDate !== "" && 
     selectedType !== "" && 
     certificateDelivery !== "" &&
+    uploadedIdPhoto !== null &&
     (!isCertificateUploadRequired || uploadedCertificate !== null);
 
   const examDates = [
@@ -188,6 +190,30 @@ export const TelcB2ExamDetails = () => {
                 <Label className="mb-3 block">
                   Zertifikat/Ergebnis <span className="text-red-500">*</span>
                 </Label>
+                
+                {/* ID Photo Upload */}
+                <div className="mb-4">
+                  <Label htmlFor="idPhoto" className="mb-2 block">
+                    Ausweisfoto hochladen <span className="text-red-500">*</span>
+                  </Label>
+                  <input
+                    type="file"
+                    id="idPhoto"
+                    accept="image/*"
+                    required
+                    onChange={(e) => setUploadedIdPhoto(e.target.files?.[0] || null)}
+                    className="block w-full text-sm text-muted-foreground
+                      file:mr-4 file:py-2 file:px-4
+                      file:rounded-md file:border-0
+                      file:text-sm file:font-semibold
+                      file:bg-primary file:text-primary-foreground
+                      hover:file:bg-primary/90"
+                  />
+                  {!uploadedIdPhoto && (
+                    <p className="text-red-500 text-sm mt-1">Bitte laden Sie Ihr Ausweisfoto hoch</p>
+                  )}
+                </div>
+
                 <RadioGroup value={certificateDelivery} onValueChange={setCertificateDelivery}>
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
