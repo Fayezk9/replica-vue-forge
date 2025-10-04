@@ -191,9 +191,26 @@ export const TelcExamDetails = () => {
                 <Label className="mb-3 block">
                   Zertifikat/Ergebnis <span className="text-red-500">*</span>
                 </Label>
+
+                <RadioGroup value={certificateDelivery} onValueChange={setCertificateDelivery}>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="office" id="office" />
+                      <Label htmlFor="office" className="cursor-pointer font-normal">
+                        Abholen im Büro
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="post" id="post" />
+                      <Label htmlFor="post" className="cursor-pointer font-normal">
+                        Per Post <span className="text-yellow-600">+ 8,00 €</span>
+                      </Label>
+                    </div>
+                  </div>
+                </RadioGroup>
                 
                 {/* ID Photo Upload */}
-                <div className="mb-4">
+                <div className="mt-4">
                   <Label htmlFor="idPhoto" className="mb-2 block">
                     Ausweisfoto hochladen <span className="text-red-500">*</span>
                   </Label>
@@ -214,23 +231,6 @@ export const TelcExamDetails = () => {
                     <p className="text-red-500 text-sm mt-1">Bitte laden Sie Ihr Ausweisfoto hoch</p>
                   )}
                 </div>
-
-                <RadioGroup value={certificateDelivery} onValueChange={setCertificateDelivery}>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="office" id="office" />
-                      <Label htmlFor="office" className="cursor-pointer font-normal">
-                        Abholen im Büro
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="post" id="post" />
-                      <Label htmlFor="post" className="cursor-pointer font-normal">
-                        Per Post <span className="text-yellow-600">+ 8,00 €</span>
-                      </Label>
-                    </div>
-                  </div>
-                </RadioGroup>
               </div>
 
               <Button 
