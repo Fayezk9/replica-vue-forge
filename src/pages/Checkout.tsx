@@ -429,25 +429,25 @@ const Checkout = () => {
                           value={formData.phoneCountryCode}
                           onValueChange={(value) => handleSelectChange("phoneCountryCode", value)}
                         >
-                          <SelectTrigger className="w-[130px] text-base font-medium h-11">
-                            <SelectValue />
+                          <SelectTrigger className="w-[130px] h-11">
+                            <SelectValue className="text-base" />
                           </SelectTrigger>
                           <SelectContent className="max-h-[300px]">
-                            <SelectItem value="+49" className="text-base py-3 cursor-pointer"><span className="text-base">🇩🇪 +49</span></SelectItem>
-                            <SelectItem value="+43" className="text-base py-3 cursor-pointer"><span className="text-base">🇦🇹 +43</span></SelectItem>
-                            <SelectItem value="+41" className="text-base py-3 cursor-pointer"><span className="text-base">🇨🇭 +41</span></SelectItem>
-                            <SelectItem value="+33" className="text-base py-3 cursor-pointer"><span className="text-base">🇫🇷 +33</span></SelectItem>
-                            <SelectItem value="+44" className="text-base py-3 cursor-pointer"><span className="text-base">🇬🇧 +44</span></SelectItem>
-                            <SelectItem value="+39" className="text-base py-3 cursor-pointer"><span className="text-base">🇮🇹 +39</span></SelectItem>
-                            <SelectItem value="+34" className="text-base py-3 cursor-pointer"><span className="text-base">🇪🇸 +34</span></SelectItem>
-                            <SelectItem value="+31" className="text-base py-3 cursor-pointer"><span className="text-base">🇳🇱 +31</span></SelectItem>
-                            <SelectItem value="+32" className="text-base py-3 cursor-pointer"><span className="text-base">🇧🇪 +32</span></SelectItem>
-                            <SelectItem value="+48" className="text-base py-3 cursor-pointer"><span className="text-base">🇵🇱 +48</span></SelectItem>
-                            <SelectItem value="+90" className="text-base py-3 cursor-pointer"><span className="text-base">🇹🇷 +90</span></SelectItem>
-                            <SelectItem value="+1" className="text-base py-3 cursor-pointer"><span className="text-base">🇺🇸 +1</span></SelectItem>
-                            <SelectItem value="+7" className="text-base py-3 cursor-pointer"><span className="text-base">🇷🇺 +7</span></SelectItem>
-                            <SelectItem value="+86" className="text-base py-3 cursor-pointer"><span className="text-base">🇨🇳 +86</span></SelectItem>
-                            <SelectItem value="+91" className="text-base py-3 cursor-pointer"><span className="text-base">🇮🇳 +91</span></SelectItem>
+                            <SelectItem value="+49" className="py-3 cursor-pointer text-base">🇩🇪 +49</SelectItem>
+                            <SelectItem value="+43" className="py-3 cursor-pointer text-base">🇦🇹 +43</SelectItem>
+                            <SelectItem value="+41" className="py-3 cursor-pointer text-base">🇨🇭 +41</SelectItem>
+                            <SelectItem value="+33" className="py-3 cursor-pointer text-base">🇫🇷 +33</SelectItem>
+                            <SelectItem value="+44" className="py-3 cursor-pointer text-base">🇬🇧 +44</SelectItem>
+                            <SelectItem value="+39" className="py-3 cursor-pointer text-base">🇮🇹 +39</SelectItem>
+                            <SelectItem value="+34" className="py-3 cursor-pointer text-base">🇪🇸 +34</SelectItem>
+                            <SelectItem value="+31" className="py-3 cursor-pointer text-base">🇳🇱 +31</SelectItem>
+                            <SelectItem value="+32" className="py-3 cursor-pointer text-base">🇧🇪 +32</SelectItem>
+                            <SelectItem value="+48" className="py-3 cursor-pointer text-base">🇵🇱 +48</SelectItem>
+                            <SelectItem value="+90" className="py-3 cursor-pointer text-base">🇹🇷 +90</SelectItem>
+                            <SelectItem value="+1" className="py-3 cursor-pointer text-base">🇺🇸 +1</SelectItem>
+                            <SelectItem value="+7" className="py-3 cursor-pointer text-base">🇷🇺 +7</SelectItem>
+                            <SelectItem value="+86" className="py-3 cursor-pointer text-base">🇨🇳 +86</SelectItem>
+                            <SelectItem value="+91" className="py-3 cursor-pointer text-base">🇮🇳 +91</SelectItem>
                             <SelectItem value="+81" className="text-base py-3 cursor-pointer"><span className="text-base">🇯🇵 +81</span></SelectItem>
                             <SelectItem value="+82" className="text-base py-3 cursor-pointer"><span className="text-base">🇰🇷 +82</span></SelectItem>
                             <SelectItem value="+55" className="text-base py-3 cursor-pointer"><span className="text-base">🇧🇷 +55</span></SelectItem>
