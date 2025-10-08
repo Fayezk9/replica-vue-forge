@@ -165,7 +165,7 @@ export const TelcExamDetails = () => {
               {/* Only show certificate upload for written or oral exams */}
               {isCertificateUploadRequired && (
                 <div>
-                  <Label htmlFor="certificate" className="mb-2 block">
+                  <Label className="mb-2 block pointer-events-none">
                     Prüfungszertifikat hochladen <span className="text-red-500">*</span>
                   </Label>
                   <input
@@ -178,7 +178,7 @@ export const TelcExamDetails = () => {
                       file:rounded-md file:border-0
                       file:text-sm file:font-semibold
                       file:bg-primary file:text-primary-foreground
-                      hover:file:bg-primary/90"
+                      hover:file:bg-primary/90 file:cursor-pointer cursor-default"
                   />
                   {isCertificateUploadRequired && !uploadedCertificate && (
                     <p className="text-red-500 text-sm mt-1">Bitte laden Sie Ihr Zertifikat hoch</p>
@@ -211,7 +211,7 @@ export const TelcExamDetails = () => {
                 
                 {/* ID Photo Upload */}
                 <div className="mt-4">
-                  <Label htmlFor="idPhoto" className="mb-2 block">
+                  <Label className="mb-2 block pointer-events-none">
                     Ausweisfoto hochladen <span className="text-red-500">*</span>
                   </Label>
                   <input
@@ -225,7 +225,7 @@ export const TelcExamDetails = () => {
                       file:rounded-md file:border-0
                       file:text-sm file:font-semibold
                       file:bg-primary file:text-primary-foreground
-                      hover:file:bg-primary/90"
+                      hover:file:bg-primary/90 file:cursor-pointer cursor-default"
                   />
                   {!uploadedIdPhoto && (
                     <p className="text-red-500 text-sm mt-1">Bitte laden Sie Ihr Ausweisfoto hoch</p>
