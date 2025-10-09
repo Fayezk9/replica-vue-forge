@@ -45,18 +45,65 @@ export const Header = () => {
                 <NavigationMenuTrigger className="bg-transparent">
                   Intensivkurse A1-C1
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-popover">
-                  <ul className="grid w-[400px] gap-3 p-4">
+                <NavigationMenuContent className="bg-popover z-50">
+                  <ul className="grid w-[300px] gap-0 p-0">
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="#termine"
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          href="/kurse"
                         >
-                          <div className="text-sm font-medium leading-none">Termine und Preise</div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Schnell und einfach anmelden
-                          </p>
+                          📚 Alle Kurse ansehen
+                        </a>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <a
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          href="/kurse/a1"
+                        >
+                          A1 Deutsch-Intensivkurs
+                        </a>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <a
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          href="/kurse/a2"
+                        >
+                          A2 Deutsch-Intensivkurs
+                        </a>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <a
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          href="/kurse/b1"
+                        >
+                          B1 Deutsch-Intensivkurs
+                        </a>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <a
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          href="/kurse/b2"
+                        >
+                          B2 Deutsch-Intensivkurs
+                        </a>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <a
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          href="/kurse/c1"
+                        >
+                          C1 Deutsch-Intensivkurs
                         </a>
                       </NavigationMenuLink>
                     </li>
