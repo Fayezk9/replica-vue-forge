@@ -145,24 +145,40 @@ const Checkout = () => {
 
     setIsLoadingStreets(true);
     try {
-      const response = await fetch(
-        `https://openplzapi.org/de/Streets?postalCode=${encodeURIComponent(postalCode)}&locality=${encodeURIComponent(city)}&pageSize=10000`,
-        {
-          headers: {
-            'Accept': 'application/json',
+      const allStreets = new Set<string>();
+      let page = 1;
+      const pageSize = 50; // API maximum
+      let hasMore = true;
+
+      // Fetch all pages
+      while (hasMore) {
+        const response = await fetch(
+          `https://openplzapi.org/de/Streets?postalCode=${encodeURIComponent(postalCode)}&locality=${encodeURIComponent(city)}&page=${page}&pageSize=${pageSize}`,
+          {
+            headers: {
+              'Accept': 'application/json',
+            }
           }
+        );
+        
+        const data = await response.json();
+        
+        // Check if response is valid array
+        if (Array.isArray(data)) {
+          data.forEach((street: StreetSuggestion) => {
+            allStreets.add(street.name);
+          });
+          
+          // If we got less than pageSize results, we've reached the end
+          hasMore = data.length === pageSize;
+          page++;
+        } else {
+          // API error or no more data
+          hasMore = false;
         }
-      );
+      }
       
-      const data = await response.json();
-      
-      // Extract unique street names
-      const uniqueStreets = new Set<string>();
-      data.forEach((street: StreetSuggestion) => {
-        uniqueStreets.add(street.name);
-      });
-      
-      const sortedStreets = Array.from(uniqueStreets).sort((a, b) => a.localeCompare(b, 'de'));
+      const sortedStreets = Array.from(allStreets).sort((a, b) => a.localeCompare(b, 'de'));
       setStreetOptions(sortedStreets);
     } catch (error) {
       console.error("Error fetching streets:", error);
