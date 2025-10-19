@@ -237,7 +237,10 @@ const Cart = () => {
 
                 <Button 
                   className="w-full mt-4 md:mt-6 bg-purple-600 hover:bg-purple-700 text-base md:text-lg py-5 md:py-6"
-                  onClick={() => navigate("/checkout")}
+                  onClick={() => {
+                    navigate("/checkout");
+                    window.scrollTo(0, 0);
+                  }}
                 >
                   Weiter zur Kasse
                 </Button>
