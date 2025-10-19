@@ -347,6 +347,34 @@ const Checkout = () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="postcode">Postleitzahl <span className="text-red-600">*</span></Label>
+                        <Input
+                          id="postcode"
+                          name="postcode"
+                          value={formData.postcode}
+                          onChange={handleInputChange}
+                          placeholder="z.B. 44137"
+                          className={errors.postcode ? "border-red-500" : ""}
+                        />
+                        {errors.postcode && <p className="text-red-600 text-sm mt-1">{errors.postcode}</p>}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="city">Stadt <span className="text-red-600">*</span></Label>
+                        <Input
+                          id="city"
+                          name="city"
+                          value={formData.city}
+                          onChange={handleInputChange}
+                          placeholder="z.B. Dortmund"
+                          className={errors.city ? "border-red-500" : ""}
+                        />
+                        {errors.city && <p className="text-red-600 text-sm mt-1">{errors.city}</p>}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="relative">
                         <Label htmlFor="street">Straße <span className="text-red-600">*</span></Label>
                         <Input
@@ -403,34 +431,6 @@ const Checkout = () => {
                           className={errors.houseNumber ? "border-red-500" : ""}
                         />
                         {errors.houseNumber && <p className="text-red-600 text-sm mt-1">{errors.houseNumber}</p>}
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="postcode">Postleitzahl <span className="text-red-600">*</span></Label>
-                        <Input
-                          id="postcode"
-                          name="postcode"
-                          value={formData.postcode}
-                          onChange={handleInputChange}
-                          placeholder="z.B. 44137"
-                          className={errors.postcode ? "border-red-500" : ""}
-                        />
-                        {errors.postcode && <p className="text-red-600 text-sm mt-1">{errors.postcode}</p>}
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="city">Stadt <span className="text-red-600">*</span></Label>
-                        <Input
-                          id="city"
-                          name="city"
-                          value={formData.city}
-                          onChange={handleInputChange}
-                          placeholder="z.B. Dortmund"
-                          className={errors.city ? "border-red-500" : ""}
-                        />
-                        {errors.city && <p className="text-red-600 text-sm mt-1">{errors.city}</p>}
                       </div>
                     </div>
 
