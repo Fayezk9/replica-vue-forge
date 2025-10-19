@@ -233,7 +233,10 @@ const Checkout = () => {
   const handlePostalCodeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     
-    setFormData(prev => ({ ...prev, [name]: value }));
+    // Only allow digits and limit to 5 characters
+    const numericValue = value.replace(/\D/g, '').slice(0, 5);
+    
+    setFormData(prev => ({ ...prev, [name]: numericValue }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
@@ -243,7 +246,7 @@ const Checkout = () => {
     }
 
     postalDebounceTimerRef.current = setTimeout(() => {
-      fetchPostalCodeSuggestions(value);
+      fetchPostalCodeSuggestions(numericValue);
     }, 300);
   };
 
@@ -423,6 +426,7 @@ const Checkout = () => {
                           placeholder="PLZ eingeben..."
                           className={errors.postcode ? "border-red-500" : ""}
                           autoComplete="off"
+                          inputMode="numeric"
                         />
                         {errors.postcode && <p className="text-red-600 text-sm mt-1">{errors.postcode}</p>}
                         
