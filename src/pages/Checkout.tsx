@@ -84,14 +84,12 @@ const Checkout = () => {
     orderNotes: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [streetSuggestions, setStreetSuggestions] = useState<StreetSuggestion[]>([]);
-  const [showStreetSuggestions, setShowStreetSuggestions] = useState(false);
+  const [streetOptions, setStreetOptions] = useState<string[]>([]);
   const [isLoadingStreets, setIsLoadingStreets] = useState(false);
   const [postalCodeSuggestions, setPostalCodeSuggestions] = useState<PostalCodeSuggestion[]>([]);
   const [showPostalCodeSuggestions, setShowPostalCodeSuggestions] = useState(false);
   const [isLoadingPostalCodes, setIsLoadingPostalCodes] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const postalDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -139,22 +137,16 @@ const Checkout = () => {
     }
   };
 
-  const fetchStreetSuggestions = useCallback(async (query: string) => {
-    if (query.length < 2) {
-      setStreetSuggestions([]);
-      return;
-    }
-
-    // Only search for streets if we have a postal code and city
-    if (!formData.postcode || !formData.city) {
-      setStreetSuggestions([]);
+  const fetchAllStreetsForPostalCode = useCallback(async (postalCode: string, city: string) => {
+    if (!postalCode || !city) {
+      setStreetOptions([]);
       return;
     }
 
     setIsLoadingStreets(true);
     try {
       const response = await fetch(
-        `https://openplzapi.org/de/Streets?name=^${encodeURIComponent(query)}&postalCode=${encodeURIComponent(formData.postcode)}&locality=${encodeURIComponent(formData.city)}&pageSize=20`,
+        `https://openplzapi.org/de/Streets?postalCode=${encodeURIComponent(postalCode)}&locality=${encodeURIComponent(city)}&pageSize=10000`,
         {
           headers: {
             'Accept': 'application/json',
@@ -164,60 +156,22 @@ const Checkout = () => {
       
       const data = await response.json();
       
-      // Filter out duplicates based on street name + locality
-      const uniqueStreets = new Map<string, StreetSuggestion>();
+      // Extract unique street names
+      const uniqueStreets = new Set<string>();
       data.forEach((street: StreetSuggestion) => {
-        const key = `${street.name}-${street.locality}`;
-        if (!uniqueStreets.has(key)) {
-          uniqueStreets.set(key, street);
-        }
+        uniqueStreets.add(street.name);
       });
       
-      setStreetSuggestions(Array.from(uniqueStreets.values()));
-      setShowStreetSuggestions(true);
+      const sortedStreets = Array.from(uniqueStreets).sort((a, b) => a.localeCompare(b, 'de'));
+      setStreetOptions(sortedStreets);
     } catch (error) {
-      console.error("Error fetching street suggestions:", error);
-      setStreetSuggestions([]);
+      console.error("Error fetching streets:", error);
+      setStreetOptions([]);
     } finally {
       setIsLoadingStreets(false);
     }
-  }, [formData.postcode, formData.city]);
+  }, []);
 
-  const handleStreetInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    
-    // Remove any numbers from street input
-    const cleanValue = value.replace(/\d/g, '');
-    
-    setFormData(prev => ({ ...prev, [name]: cleanValue }));
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
-    }
-
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    debounceTimerRef.current = setTimeout(() => {
-      fetchStreetSuggestions(cleanValue);
-    }, 300);
-  };
-
-  const handleSelectStreet = (suggestion: StreetSuggestion) => {
-    setFormData(prev => ({
-      ...prev,
-      street: suggestion.name,
-      city: suggestion.locality,
-      postcode: suggestion.postalCode
-    }));
-    
-    setShowStreetSuggestions(false);
-    setStreetSuggestions([]);
-    
-    if (errors.street) setErrors(prev => ({ ...prev, street: "" }));
-    if (errors.city) setErrors(prev => ({ ...prev, city: "" }));
-    if (errors.postcode) setErrors(prev => ({ ...prev, postcode: "" }));
-  };
 
   const fetchPostalCodeSuggestions = useCallback(async (query: string) => {
     if (query.length < 2) {
@@ -281,7 +235,8 @@ const Checkout = () => {
     setFormData(prev => ({
       ...prev,
       postcode: suggestion.postalCode,
-      city: suggestion.name
+      city: suggestion.name,
+      street: "" // Reset street when postal code changes
     }));
     
     setShowPostalCodeSuggestions(false);
@@ -289,6 +244,9 @@ const Checkout = () => {
     
     if (errors.postcode) setErrors(prev => ({ ...prev, postcode: "" }));
     if (errors.city) setErrors(prev => ({ ...prev, city: "" }));
+    
+    // Fetch all streets for the selected postal code
+    fetchAllStreetsForPostalCode(suggestion.postalCode, suggestion.name);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -491,49 +449,36 @@ const Checkout = () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="relative">
+                      <div>
                         <Label htmlFor="street">Straße <span className="text-red-600">*</span></Label>
-                        <Input
-                          id="street"
-                          name="street"
-                          value={formData.street}
-                          onChange={handleStreetInputChange}
-                          onFocus={() => {
-                            if (streetSuggestions.length > 0) {
-                              setShowStreetSuggestions(true);
-                            }
-                          }}
-                          placeholder="Straßenname eingeben..."
-                          className={errors.street ? "border-red-500" : ""}
-                          autoComplete="off"
-                        />
-                        {errors.street && <p className="text-red-600 text-sm mt-1">{errors.street}</p>}
-                        
-                        {showStreetSuggestions && streetSuggestions.length > 0 && (
-                          <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border-2 border-primary rounded-md shadow-lg max-h-[300px] overflow-auto">
-                            {isLoadingStreets ? (
-                              <div className="p-4 text-sm text-muted-foreground">Laden...</div>
-                            ) : (
-                              <div>
-                                {streetSuggestions.map((suggestion, index) => (
-                                  <div
-                                    key={`${suggestion.name}-${suggestion.locality}-${index}`}
-                                    onClick={() => handleSelectStreet(suggestion)}
-                                    className="px-4 py-3 cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors border-b border-border last:border-b-0"
-                                  >
-                                    <div className="flex flex-col">
-                                      <span className="font-semibold text-base">{suggestion.name}</span>
-                                      <span className="text-sm opacity-90 mt-1">
-                                        {suggestion.postalCode} {suggestion.locality}
-                                        {suggestion.borough && ` (${suggestion.borough})`}
-                                      </span>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
+                        {isLoadingStreets ? (
+                          <div className="h-11 flex items-center px-3 border border-input rounded-md bg-muted">
+                            <span className="text-sm text-muted-foreground">Straßen werden geladen...</span>
+                          </div>
+                        ) : streetOptions.length > 0 ? (
+                          <Select
+                            value={formData.street}
+                            onValueChange={(value) => handleSelectChange("street", value)}
+                          >
+                            <SelectTrigger className={errors.street ? "border-red-500" : ""}>
+                              <SelectValue placeholder="Straße auswählen..." />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-[300px]">
+                              {streetOptions.map((street) => (
+                                <SelectItem key={street} value={street} className="cursor-pointer">
+                                  {street}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          <div className="h-11 flex items-center px-3 border border-input rounded-md bg-muted">
+                            <span className="text-sm text-muted-foreground">
+                              {formData.postcode && formData.city ? "Keine Straßen gefunden" : "Bitte erst PLZ auswählen"}
+                            </span>
                           </div>
                         )}
+                        {errors.street && <p className="text-red-600 text-sm mt-1">{errors.street}</p>}
                       </div>
                       
                       <div>
