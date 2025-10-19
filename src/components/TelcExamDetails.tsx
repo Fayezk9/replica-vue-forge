@@ -256,6 +256,7 @@ export const TelcExamDetails = () => {
                   
                   localStorage.setItem("cartData", JSON.stringify(cartData));
                   navigate("/warenkorb");
+                  window.scrollTo(0, 0);
                 }}
               >
                 In den Warenkorb
