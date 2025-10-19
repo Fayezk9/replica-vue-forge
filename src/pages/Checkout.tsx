@@ -33,6 +33,11 @@ interface StreetSuggestion {
   borough?: string;
 }
 
+interface PostalCodeSuggestion {
+  postalCode: string;
+  name: string;
+}
+
 const checkoutSchema = z.object({
   gender: z.enum(["Herr", "Frau", "Divers"], { 
     errorMap: () => ({ message: "Bitte wählen" })
@@ -82,8 +87,12 @@ const Checkout = () => {
   const [streetSuggestions, setStreetSuggestions] = useState<StreetSuggestion[]>([]);
   const [showStreetSuggestions, setShowStreetSuggestions] = useState(false);
   const [isLoadingStreets, setIsLoadingStreets] = useState(false);
+  const [postalCodeSuggestions, setPostalCodeSuggestions] = useState<PostalCodeSuggestion[]>([]);
+  const [showPostalCodeSuggestions, setShowPostalCodeSuggestions] = useState(false);
+  const [isLoadingPostalCodes, setIsLoadingPostalCodes] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const postalDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const savedCart = localStorage.getItem("cartData");
@@ -202,6 +211,78 @@ const Checkout = () => {
     if (errors.street) setErrors(prev => ({ ...prev, street: "" }));
     if (errors.city) setErrors(prev => ({ ...prev, city: "" }));
     if (errors.postcode) setErrors(prev => ({ ...prev, postcode: "" }));
+  };
+
+  const fetchPostalCodeSuggestions = useCallback(async (query: string) => {
+    if (query.length < 2) {
+      setPostalCodeSuggestions([]);
+      return;
+    }
+
+    setIsLoadingPostalCodes(true);
+    try {
+      const response = await fetch(
+        `https://openplzapi.org/de/Localities?postalCode=${encodeURIComponent(query)}&pageSize=20`,
+        {
+          headers: {
+            'Accept': 'application/json',
+          }
+        }
+      );
+      
+      const data = await response.json();
+      
+      // Remove duplicates based on postal code + locality
+      const uniquePostalCodes = new Map<string, PostalCodeSuggestion>();
+      data.forEach((locality: { postalCode: string; name: string }) => {
+        const key = `${locality.postalCode}-${locality.name}`;
+        if (!uniquePostalCodes.has(key)) {
+          uniquePostalCodes.set(key, {
+            postalCode: locality.postalCode,
+            name: locality.name
+          });
+        }
+      });
+      
+      setPostalCodeSuggestions(Array.from(uniquePostalCodes.values()));
+      setShowPostalCodeSuggestions(true);
+    } catch (error) {
+      console.error("Error fetching postal code suggestions:", error);
+      setPostalCodeSuggestions([]);
+    } finally {
+      setIsLoadingPostalCodes(false);
+    }
+  }, []);
+
+  const handlePostalCodeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+
+    if (postalDebounceTimerRef.current) {
+      clearTimeout(postalDebounceTimerRef.current);
+    }
+
+    postalDebounceTimerRef.current = setTimeout(() => {
+      fetchPostalCodeSuggestions(value);
+    }, 300);
+  };
+
+  const handleSelectPostalCode = (suggestion: PostalCodeSuggestion) => {
+    setFormData(prev => ({
+      ...prev,
+      postcode: suggestion.postalCode,
+      city: suggestion.name
+    }));
+    
+    setShowPostalCodeSuggestions(false);
+    setPostalCodeSuggestions([]);
+    
+    if (errors.postcode) setErrors(prev => ({ ...prev, postcode: "" }));
+    if (errors.city) setErrors(prev => ({ ...prev, city: "" }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -347,17 +428,46 @@ const Checkout = () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
+                      <div className="relative">
                         <Label htmlFor="postcode">Postleitzahl <span className="text-red-600">*</span></Label>
                         <Input
                           id="postcode"
                           name="postcode"
                           value={formData.postcode}
-                          onChange={handleInputChange}
-                          placeholder="z.B. 44137"
+                          onChange={handlePostalCodeInputChange}
+                          onFocus={() => {
+                            if (postalCodeSuggestions.length > 0) {
+                              setShowPostalCodeSuggestions(true);
+                            }
+                          }}
+                          placeholder="PLZ eingeben..."
                           className={errors.postcode ? "border-red-500" : ""}
+                          autoComplete="off"
                         />
                         {errors.postcode && <p className="text-red-600 text-sm mt-1">{errors.postcode}</p>}
+                        
+                        {showPostalCodeSuggestions && postalCodeSuggestions.length > 0 && (
+                          <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border-2 border-primary rounded-md shadow-lg max-h-[300px] overflow-auto">
+                            {isLoadingPostalCodes ? (
+                              <div className="p-4 text-sm text-muted-foreground">Laden...</div>
+                            ) : (
+                              <div>
+                                {postalCodeSuggestions.map((suggestion, index) => (
+                                  <div
+                                    key={`${suggestion.postalCode}-${suggestion.name}-${index}`}
+                                    onClick={() => handleSelectPostalCode(suggestion)}
+                                    className="px-4 py-3 cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors border-b border-border last:border-b-0"
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-semibold text-base">{suggestion.postalCode}</span>
+                                      <span className="text-sm opacity-90">{suggestion.name}</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                       
                       <div>
