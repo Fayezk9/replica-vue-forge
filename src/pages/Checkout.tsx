@@ -145,10 +145,16 @@ const Checkout = () => {
       return;
     }
 
+    // Only search for streets if we have a postal code and city
+    if (!formData.postcode || !formData.city) {
+      setStreetSuggestions([]);
+      return;
+    }
+
     setIsLoadingStreets(true);
     try {
       const response = await fetch(
-        `https://openplzapi.org/de/Streets?name=^${encodeURIComponent(query)}&pageSize=20`,
+        `https://openplzapi.org/de/Streets?name=^${encodeURIComponent(query)}&postalCode=${encodeURIComponent(formData.postcode)}&locality=${encodeURIComponent(formData.city)}&pageSize=20`,
         {
           headers: {
             'Accept': 'application/json',
@@ -175,7 +181,7 @@ const Checkout = () => {
     } finally {
       setIsLoadingStreets(false);
     }
-  }, []);
+  }, [formData.postcode, formData.city]);
 
   const handleStreetInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
