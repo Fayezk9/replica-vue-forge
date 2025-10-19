@@ -279,7 +279,19 @@ const Checkout = () => {
       <main className="py-6 md:py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-8">Kasse</h1>
+            <div className="flex items-center gap-4 mb-6 md:mb-8">
+              <Button 
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  navigate("/warenkorb");
+                  window.scrollTo(0, 0);
+                }}
+              >
+                ← Zurück zum Warenkorb
+              </Button>
+              <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold">Kasse</h1>
+            </div>
             
             <form onSubmit={handleSubmit}>
               <div className="space-y-8">
