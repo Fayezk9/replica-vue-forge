@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { ChevronDown, User, LogOut } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { AuthDialog } from "@/components/AuthDialog";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -15,6 +17,7 @@ export const Header = () => {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
   const { user, signOut } = useAuth();
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
   
   return (
     <header className="bg-card border-b border-border sticky top-0 z-[100] shadow-sm">
@@ -232,19 +235,22 @@ export const Header = () => {
                 </NavigationMenuItem>
               ) : (
                 <NavigationMenuItem>
-                  <NavigationMenuLink
-                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/90"
-                    href="/auth"
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => setAuthDialogOpen(true)}
+                    className="gap-2"
                   >
-                    <User className="w-4 h-4 mr-2" />
+                    <User className="w-4 h-4" />
                     Anmelden
-                  </NavigationMenuLink>
+                  </Button>
                 </NavigationMenuItem>
               )}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
       </div>
+      <AuthDialog open={authDialogOpen} onOpenChange={setAuthDialogOpen} />
     </header>
   );
 };
