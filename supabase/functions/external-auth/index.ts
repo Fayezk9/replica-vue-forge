@@ -7,6 +7,7 @@ const corsHeaders = {
 
 interface AuthRequest {
   action: 'signup' | 'login' | 'logout' | 'get-session';
+  emailOrUsername?: string;
   email?: string;
   password?: string;
   fullName?: string;
@@ -27,7 +28,7 @@ Deno.serve(async (req) => {
     }
 
     const externalSupabase = createClient(externalSupabaseUrl, externalSupabaseKey);
-    const { action, email, password, fullName, username }: AuthRequest = await req.json();
+    const { action, emailOrUsername, email, password, fullName, username }: AuthRequest = await req.json();
 
     console.log('External auth action:', action);
 
@@ -75,12 +76,42 @@ Deno.serve(async (req) => {
       }
 
       case 'login': {
-        if (!email || !password) {
-          throw new Error('Email and password required for login');
+        if (!emailOrUsername || !password) {
+          throw new Error('Email/username and password required for login');
+        }
+
+        // Check if input is email or username
+        const isEmail = emailOrUsername.includes('@');
+        let loginEmail = emailOrUsername;
+
+        // If username is provided, fetch the email from local database
+        if (!isEmail) {
+          const localSupabaseUrl = Deno.env.get('SUPABASE_URL');
+          const localSupabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+          const localSupabase = createClient(localSupabaseUrl!, localSupabaseKey!);
+
+          const { data: profile, error: profileError } = await localSupabase
+            .from('profiles')
+            .select('user_id')
+            .eq('username', emailOrUsername)
+            .single();
+
+          if (profileError || !profile) {
+            throw new Error('Invalid username or password');
+          }
+
+          // Get user email from external Supabase
+          const { data: userData, error: userError } = await externalSupabase.auth.admin.getUserById(profile.user_id);
+          
+          if (userError || !userData.user?.email) {
+            throw new Error('Invalid username or password');
+          }
+
+          loginEmail = userData.user.email;
         }
 
         const { data: loginData, error: loginError } = await externalSupabase.auth.signInWithPassword({
-          email,
+          email: loginEmail,
           password,
         });
 

@@ -19,6 +19,7 @@ interface AuthDialogProps {
 
 export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   const [isLogin, setIsLogin] = useState(true);
+  const [emailOrUsername, setEmailOrUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -32,7 +33,7 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
     setLoading(true);
 
     if (isLogin) {
-      const { error } = await signIn(email, password);
+      const { error } = await signIn(emailOrUsername, password);
       if (!error) {
         onOpenChange(false);
         resetForm();
@@ -49,6 +50,7 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   };
 
   const resetForm = () => {
+    setEmailOrUsername('');
     setEmail('');
     setPassword('');
     setFullName('');
@@ -78,13 +80,13 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
           <TabsContent value="login">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">E-Mail</Label>
+                <Label htmlFor="emailOrUsername">E-Mail oder Benutzername</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="ihre@email.de"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="emailOrUsername"
+                  type="text"
+                  placeholder="ihre@email.de oder benutzername"
+                  value={emailOrUsername}
+                  onChange={(e) => setEmailOrUsername(e.target.value)}
                   required
                 />
               </div>
