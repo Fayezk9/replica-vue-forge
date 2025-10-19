@@ -1,12 +1,14 @@
 import { Phone, Mail, MapPin, Search } from "lucide-react";
+import { Button } from "./ui/button";
 
 export const TopBar = () => {
   return (
     <div className="bg-secondary border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-12 text-sm">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <span className="font-medium">DORTMUND</span>
+            <Button variant="outline" size="sm">My School</Button>
           </div>
           <div className="flex items-center gap-6">
             <a href="tel:+4915238455744" className="flex items-center gap-2 hover:text-primary transition-colors">
