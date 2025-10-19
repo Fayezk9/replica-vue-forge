@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -83,6 +84,7 @@ const Checkout = () => {
     motherTongue: "",
     orderNotes: "",
   });
+  const [isManualAddress, setIsManualAddress] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [streetOptions, setStreetOptions] = useState<string[]>([]);
   const [isLoadingStreets, setIsLoadingStreets] = useState(false);
@@ -410,6 +412,29 @@ const Checkout = () => {
                       </div>
                     </div>
 
+                    {/* Manual Address Toggle */}
+                    <div className="flex items-center space-x-2 py-2">
+                      <Checkbox 
+                        id="manualAddress" 
+                        checked={isManualAddress}
+                        onCheckedChange={(checked) => {
+                          setIsManualAddress(checked as boolean);
+                          if (checked) {
+                            // Clear automated fields when switching to manual
+                            setStreetOptions([]);
+                            setPostalCodeSuggestions([]);
+                            setShowPostalCodeSuggestions(false);
+                          } else {
+                            // Clear manual entries when switching back to German address
+                            setFormData(prev => ({ ...prev, street: "", postcode: "", city: "" }));
+                          }
+                        }}
+                      />
+                      <Label htmlFor="manualAddress" className="text-sm font-normal cursor-pointer">
+                        Adresse außerhalb Deutschlands (manuelle Eingabe)
+                      </Label>
+                    </div>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="relative">
                         <Label htmlFor="postcode">Postleitzahl <span className="text-red-600">*</span></Label>
@@ -417,20 +442,20 @@ const Checkout = () => {
                           id="postcode"
                           name="postcode"
                           value={formData.postcode}
-                          onChange={handlePostalCodeInputChange}
+                          onChange={isManualAddress ? handleInputChange : handlePostalCodeInputChange}
                           onFocus={() => {
-                            if (postalCodeSuggestions.length > 0) {
+                            if (!isManualAddress && postalCodeSuggestions.length > 0) {
                               setShowPostalCodeSuggestions(true);
                             }
                           }}
-                          placeholder="PLZ eingeben..."
+                          placeholder={isManualAddress ? "PLZ eingeben..." : "PLZ eingeben..."}
                           className={errors.postcode ? "border-red-500" : ""}
                           autoComplete="off"
-                          inputMode="numeric"
+                          inputMode={isManualAddress ? "text" : "numeric"}
                         />
                         {errors.postcode && <p className="text-red-600 text-sm mt-1">{errors.postcode}</p>}
                         
-                        {showPostalCodeSuggestions && postalCodeSuggestions.length > 0 && (
+                        {!isManualAddress && showPostalCodeSuggestions && postalCodeSuggestions.length > 0 && (
                           <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border-2 border-primary rounded-md shadow-lg max-h-[300px] overflow-auto">
                             {isLoadingPostalCodes ? (
                               <div className="p-4 text-sm text-muted-foreground">Laden...</div>
@@ -463,6 +488,7 @@ const Checkout = () => {
                           onChange={handleInputChange}
                           placeholder="z.B. Dortmund"
                           className={errors.city ? "border-red-500" : ""}
+                          readOnly={!isManualAddress}
                         />
                         {errors.city && <p className="text-red-600 text-sm mt-1">{errors.city}</p>}
                       </div>
@@ -471,7 +497,16 @@ const Checkout = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="street">Straße <span className="text-red-600">*</span></Label>
-                        {isLoadingStreets ? (
+                        {isManualAddress ? (
+                          <Input
+                            id="street"
+                            name="street"
+                            value={formData.street}
+                            onChange={handleInputChange}
+                            placeholder="Straßenname eingeben..."
+                            className={errors.street ? "border-red-500" : ""}
+                          />
+                        ) : isLoadingStreets ? (
                           <div className="h-11 flex items-center px-3 border border-input rounded-md bg-muted">
                             <span className="text-sm text-muted-foreground">Straßen werden geladen...</span>
                           </div>
