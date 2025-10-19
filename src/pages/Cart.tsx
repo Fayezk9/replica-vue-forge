@@ -235,15 +235,27 @@ const Cart = () => {
                   </div>
                 </div>
 
-                <Button 
-                  className="w-full mt-4 md:mt-6 bg-purple-600 hover:bg-purple-700 text-base md:text-lg py-5 md:py-6"
-                  onClick={() => {
-                    navigate("/checkout");
-                    window.scrollTo(0, 0);
-                  }}
-                >
-                  Weiter zur Kasse
-                </Button>
+                <div className="flex flex-col-reverse md:flex-row gap-3 mt-4 md:mt-6">
+                  <Button 
+                    variant="outline"
+                    className="flex-1 text-base md:text-lg py-5 md:py-6"
+                    onClick={() => {
+                      navigate(-1);
+                      window.scrollTo(0, 0);
+                    }}
+                  >
+                    ← Zurück
+                  </Button>
+                  <Button 
+                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-base md:text-lg py-5 md:py-6"
+                    onClick={() => {
+                      navigate("/checkout");
+                      window.scrollTo(0, 0);
+                    }}
+                  >
+                    Weiter zur Kasse
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
