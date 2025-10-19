@@ -1,1 +1,4 @@
 project_id = "zkiaowwhxdpuxjxxhrpx"
+
+[functions.external-auth]
+verify_jwt = false

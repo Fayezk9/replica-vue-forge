@@ -1,5 +1,7 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, User, LogOut } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,6 +14,7 @@ import {
 export const Header = () => {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+  const { user, signOut } = useAuth();
   
   return (
     <header className="bg-card border-b border-border sticky top-0 z-[100] shadow-sm">
@@ -214,6 +217,30 @@ export const Header = () => {
                   🛒 0 Artikel
                 </NavigationMenuLink>
               </NavigationMenuItem>
+
+              {user ? (
+                <NavigationMenuItem>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => signOut()}
+                    className="gap-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Abmelden
+                  </Button>
+                </NavigationMenuItem>
+              ) : (
+                <NavigationMenuItem>
+                  <NavigationMenuLink
+                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/90"
+                    href="/auth"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Anmelden
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              )}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
