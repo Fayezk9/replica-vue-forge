@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
+import TelcOverview from "./pages/TelcOverview";
 import TelcB1 from "./pages/TelcB1";
 import TelcB2 from "./pages/TelcB2";
 import TelcC1 from "./pages/TelcC1";
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/kurse/b1" element={<CourseB1 />} />
             <Route path="/kurse/b2" element={<CourseB2 />} />
             <Route path="/kurse/c1" element={<CourseC1 />} />
+            <Route path="/telc-prufungen" element={<TelcOverview />} />
             <Route path="/telc-b1" element={<TelcB1 />} />
             <Route path="/telc-b2" element={<TelcB2 />} />
             <Route path="/telc-c1" element={<TelcC1 />} />
