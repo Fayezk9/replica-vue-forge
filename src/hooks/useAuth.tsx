@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const redirectUrl = `${window.location.origin}/`;
       
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -55,15 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) throw error;
 
-      // Create profile record if signup successful
-      if (data.user) {
-        await supabase.from('profiles').insert({
-          user_id: data.user.id,
-          username: username || email.split('@')[0],
-          full_name: fullName,
-        });
-      }
-
+      // Profile will be created automatically by database trigger
       return { error: null };
     } catch (error) {
       console.error('Sign up error:', error);
