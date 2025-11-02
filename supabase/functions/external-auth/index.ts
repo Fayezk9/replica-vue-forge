@@ -121,12 +121,8 @@ Deno.serve(async (req) => {
       }
 
       case 'logout': {
-        const authHeader = req.headers.get('Authorization');
-        if (authHeader) {
-          const token = authHeader.replace('Bearer ', '');
-          const { error: logoutError } = await externalSupabase.auth.admin.signOut(token);
-          if (logoutError) throw logoutError;
-        }
+        // Client-side handles logout by clearing local storage
+        // No server-side action needed
         result = { success: true };
         break;
       }
