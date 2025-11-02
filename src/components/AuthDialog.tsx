@@ -24,6 +24,8 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
+  const [registrationCode, setRegistrationCode] = useState('');
+  const [showRegistrationCode, setShowRegistrationCode] = useState(false);
   const [loading, setLoading] = useState(false);
   
   const { signIn, signUp } = useAuth();
@@ -39,7 +41,7 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
         resetForm();
       }
     } else {
-      const { error } = await signUp(email, password, fullName, username);
+      const { error } = await signUp(email, password, fullName, username, registrationCode);
       if (!error) {
         onOpenChange(false);
         resetForm();
@@ -55,6 +57,8 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
     setPassword('');
     setFullName('');
     setUsername('');
+    setRegistrationCode('');
+    setShowRegistrationCode(false);
   };
 
   return (
@@ -149,6 +153,29 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
                   required
                 />
               </div>
+              
+              {!showRegistrationCode ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setShowRegistrationCode(true)}
+                >
+                  Ich habe einen Registrierungscode
+                </Button>
+              ) : (
+                <div className="space-y-2">
+                  <Label htmlFor="registration-code">Registrierungscode (optional)</Label>
+                  <Input
+                    id="registration-code"
+                    type="text"
+                    placeholder="Code eingeben"
+                    value={registrationCode}
+                    onChange={(e) => setRegistrationCode(e.target.value)}
+                  />
+                </div>
+              )}
+              
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Wird geladen...' : 'Konto erstellen'}
               </Button>

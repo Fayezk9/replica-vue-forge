@@ -12,6 +12,7 @@ interface AuthRequest {
   password?: string;
   fullName?: string;
   username?: string;
+  registrationCode?: string;
 }
 
 Deno.serve(async (req) => {
@@ -28,7 +29,7 @@ Deno.serve(async (req) => {
     }
 
     const externalSupabase = createClient(externalSupabaseUrl, externalSupabaseKey);
-    const { action, emailOrUsername, email, password, fullName, username }: AuthRequest = await req.json();
+    const { action, emailOrUsername, email, password, fullName, username, registrationCode }: AuthRequest = await req.json();
 
     console.log('External auth action:', action);
 
@@ -47,6 +48,7 @@ Deno.serve(async (req) => {
             data: {
               full_name: fullName,
               username: username,
+              registration_code: registrationCode,
             }
           }
         });

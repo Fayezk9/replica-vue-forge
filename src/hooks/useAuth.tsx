@@ -7,7 +7,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName?: string, username?: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName?: string, username?: string, registrationCode?: string) => Promise<{ error: Error | null }>;
   signIn: (emailOrUsername: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
@@ -35,10 +35,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(false);
   }, []);
 
-  const signUp = async (email: string, password: string, fullName?: string, username?: string) => {
+  const signUp = async (email: string, password: string, fullName?: string, username?: string, registrationCode?: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('external-auth', {
-        body: { action: 'signup', email, password, fullName, username },
+        body: { action: 'signup', email, password, fullName, username, registrationCode },
       });
 
       if (error) throw error;
