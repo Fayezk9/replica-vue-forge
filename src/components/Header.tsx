@@ -3,7 +3,7 @@ import { ChevronDown, User, LogOut } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { AuthDialog } from "@/components/AuthDialog";
+import AuthDialog from "@/components/AuthDialog";
 import {
   NavigationMenu,
   NavigationMenuContent,

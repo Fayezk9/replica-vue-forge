@@ -1,31 +1,23 @@
-import { useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 interface AuthDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
+const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   const [isLogin, setIsLogin] = useState(true);
-  const [emailOrUsername, setEmailOrUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
-  const [registrationCode, setRegistrationCode] = useState('');
-  const [showRegistrationCode, setShowRegistrationCode] = useState(false);
   const [loading, setLoading] = useState(false);
   
   const { signIn, signUp } = useAuth();
@@ -33,50 +25,45 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+    
     if (isLogin) {
-      const { error } = await signIn(emailOrUsername, password);
+      const { error } = await signIn(email, password);
       if (!error) {
         onOpenChange(false);
         resetForm();
+      } else {
+        toast.error(error.message || 'Anmeldung fehlgeschlagen');
       }
     } else {
-      const { error } = await signUp(email, password, fullName, username, registrationCode);
+      const { error } = await signUp(email, password, fullName, username);
       if (!error) {
         onOpenChange(false);
         resetForm();
+        toast.success('Konto erfolgreich erstellt!');
+      } else {
+        toast.error(error.message || 'Registrierung fehlgeschlagen');
       }
     }
-
     setLoading(false);
   };
 
   const resetForm = () => {
-    setEmailOrUsername('');
     setEmail('');
     setPassword('');
     setFullName('');
     setUsername('');
-    setRegistrationCode('');
-    setShowRegistrationCode(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl text-center">
-            {isLogin ? 'Anmelden' : 'Registrieren'}
+          <DialogTitle>
+            {isLogin ? 'Anmelden' : 'Konto erstellen'}
           </DialogTitle>
-          <DialogDescription className="text-center">
-            {isLogin 
-              ? 'Melden Sie sich bei Ihrem Konto an' 
-              : 'Erstellen Sie ein neues Konto'}
-          </DialogDescription>
         </DialogHeader>
-        
         <Tabs value={isLogin ? 'login' : 'signup'} onValueChange={(v) => setIsLogin(v === 'login')}>
-          <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Anmelden</TabsTrigger>
             <TabsTrigger value="signup">Registrieren</TabsTrigger>
           </TabsList>
@@ -84,21 +71,22 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
           <TabsContent value="login">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="emailOrUsername">E-Mail oder Benutzername</Label>
+                <Label htmlFor="login-email">E-Mail</Label>
                 <Input
-                  id="emailOrUsername"
-                  type="text"
-                  placeholder="ihre@email.de oder benutzername"
-                  value={emailOrUsername}
-                  onChange={(e) => setEmailOrUsername(e.target.value)}
+                  id="login-email"
+                  type="email"
+                  placeholder="ihre@email.de"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Passwort</Label>
+                <Label htmlFor="login-password">Passwort</Label>
                 <Input
-                  id="password"
+                  id="login-password"
                   type="password"
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -113,23 +101,25 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
           <TabsContent value="signup">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="fullName">Vollständiger Name</Label>
+                <Label htmlFor="signup-name">Vollständiger Name</Label>
                 <Input
-                  id="fullName"
+                  id="signup-name"
                   type="text"
                   placeholder="Max Mustermann"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
+                  required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="username">Benutzername</Label>
+                <Label htmlFor="signup-username">Benutzername</Label>
                 <Input
-                  id="username"
+                  id="signup-username"
                   type="text"
-                  placeholder="maxmustermann"
+                  placeholder="maxmuster"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  required
                 />
               </div>
               <div className="space-y-2">
@@ -148,33 +138,12 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
                 <Input
                   id="signup-password"
                   type="password"
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
-              
-              {!showRegistrationCode ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => setShowRegistrationCode(true)}
-                >
-                  Ich habe einen Registrierungscode
-                </Button>
-              ) : (
-                <div className="space-y-2">
-                  <Label htmlFor="registration-code">Registrierungscode (optional)</Label>
-                  <Input
-                    id="registration-code"
-                    type="text"
-                    placeholder="Code eingeben"
-                    value={registrationCode}
-                    onChange={(e) => setRegistrationCode(e.target.value)}
-                  />
-                </div>
-              )}
               
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Wird geladen...' : 'Konto erstellen'}
@@ -186,3 +155,5 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
     </Dialog>
   );
 };
+
+export default AuthDialog;

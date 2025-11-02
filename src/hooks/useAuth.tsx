@@ -1,14 +1,13 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName?: string, username?: string, registrationCode?: string) => Promise<{ error: Error | null }>;
-  signIn: (emailOrUsername: string, password: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName?: string, username?: string) => Promise<{ error: Error | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -18,106 +17,79 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
 
   useEffect(() => {
-    // Check if user has a stored session
-    const storedSession = localStorage.getItem('auth_session');
-    if (storedSession) {
-      try {
-        const parsed = JSON.parse(storedSession);
-        setSession(parsed.session);
-        setUser(parsed.user);
-      } catch (e) {
-        console.error('Error parsing stored session:', e);
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
       }
-    }
-    setLoading(false);
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, fullName?: string, username?: string, registrationCode?: string) => {
+  const signUp = async (email: string, password: string, fullName?: string, username?: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke('external-auth', {
-        body: { action: 'signup', email, password, fullName, username, registrationCode },
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            full_name: fullName,
+            username: username,
+          }
+        }
       });
 
       if (error) throw error;
-      if (data.error) throw new Error(data.error);
 
-      const { user, session } = data;
-      setUser(user);
-      setSession(session);
-      localStorage.setItem('auth_session', JSON.stringify({ user, session }));
-
-      toast({
-        title: 'Account created!',
-        description: 'Welcome to inlingua Dortmund',
-      });
+      // Create profile record if signup successful
+      if (data.user) {
+        await supabase.from('profiles').insert({
+          user_id: data.user.id,
+          username: username || email.split('@')[0],
+          full_name: fullName,
+        });
+      }
 
       return { error: null };
-    } catch (error: any) {
-      toast({
-        title: 'Signup failed',
-        description: error.message,
-        variant: 'destructive',
-      });
-      return { error };
+    } catch (error) {
+      console.error('Sign up error:', error);
+      return { error: error as Error };
     }
   };
 
-  const signIn = async (emailOrUsername: string, password: string) => {
+  const signIn = async (email: string, password: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke('external-auth', {
-        body: { action: 'login', emailOrUsername, password },
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
       if (error) throw error;
-      if (data.error) throw new Error(data.error);
-
-      const { user, session } = data;
-      setUser(user);
-      setSession(session);
-      localStorage.setItem('auth_session', JSON.stringify({ user, session }));
-
-      toast({
-        title: 'Welcome back!',
-        description: 'Successfully signed in',
-      });
-
       return { error: null };
-    } catch (error: any) {
-      toast({
-        title: 'Login failed',
-        description: error.message,
-        variant: 'destructive',
-      });
-      return { error };
+    } catch (error) {
+      console.error('Sign in error:', error);
+      return { error: error as Error };
     }
   };
 
   const signOut = async () => {
-    try {
-      const { error } = await supabase.functions.invoke('external-auth', {
-        body: { action: 'logout' },
-      });
-
-      if (error) throw error;
-
-      setUser(null);
-      setSession(null);
-      localStorage.removeItem('auth_session');
-
-      toast({
-        title: 'Signed out',
-        description: 'You have been signed out successfully',
-      });
-    } catch (error: any) {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
-    }
+    await supabase.auth.signOut();
+    setUser(null);
+    setSession(null);
   };
 
   return (
