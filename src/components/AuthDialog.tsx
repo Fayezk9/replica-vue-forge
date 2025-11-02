@@ -31,6 +31,7 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
       if (!error) {
         onOpenChange(false);
         resetForm();
+        toast.success('Erfolgreich angemeldet!');
       } else {
         toast.error(error.message || 'Anmeldung fehlgeschlagen');
       }
