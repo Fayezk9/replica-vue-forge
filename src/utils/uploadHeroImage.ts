@@ -1,4 +1,4 @@
-const IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fd5ceaaf188a440b69293546711d11d26%2F68fe49370f5d46d5be595a3f13105b6a";
+const IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fd5ceaaf188a440b69293546711d11d26%2Fa788ed82a2704e1fb8f28ea1a9c76de3";
 
 export async function uploadHeroImageToSupabase(): Promise<string | null> {
   try {
