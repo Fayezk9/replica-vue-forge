@@ -24,8 +24,8 @@ export const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {isHomePage ? (
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-foreground rounded-full flex items-center justify-center">
+            <div className="flex items-center gap-2 group">
+              <div className="w-10 h-10 bg-foreground rounded-full flex items-center justify-center transition-all duration-300 group-hover:shadow-lg group-hover:scale-110">
                 <span className="text-background font-bold text-xl">i</span>
               </div>
               <div className="flex flex-col">
@@ -34,11 +34,11 @@ export const Header = () => {
               </div>
             </div>
           ) : (
-            <a href="/" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
-              <div className="w-10 h-10 bg-foreground rounded-full flex items-center justify-center">
+            <a href="/" className="flex items-center gap-2 cursor-pointer group transition-all duration-300">
+              <div className="w-10 h-10 bg-foreground rounded-full flex items-center justify-center transition-all duration-300 group-hover:shadow-lg group-hover:scale-110">
                 <span className="text-background font-bold text-xl">i</span>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col transition-all duration-300 group-hover:-translate-y-0.5">
                 <span className="font-bold text-xl">inlingua</span>
                 <span className="text-sm text-muted-foreground">Dortmund</span>
               </div>
