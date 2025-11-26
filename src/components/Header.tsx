@@ -56,7 +56,7 @@ export const Header = () => {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:translate-x-1 focus:bg-accent focus:text-accent-foreground border-b border-border"
                           href="/kurse"
                         >
                           📚 Alle Kurse ansehen
@@ -66,7 +66,7 @@ export const Header = () => {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:translate-x-1 focus:bg-accent focus:text-accent-foreground border-b border-border"
                           href="/kurse/a1"
                         >
                           A1 Deutsch-Intensivkurs
@@ -76,7 +76,7 @@ export const Header = () => {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:translate-x-1 focus:bg-accent focus:text-accent-foreground border-b border-border"
                           href="/kurse/a2"
                         >
                           A2 Deutsch-Intensivkurs
@@ -86,7 +86,7 @@ export const Header = () => {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:translate-x-1 focus:bg-accent focus:text-accent-foreground border-b border-border"
                           href="/kurse/b1"
                         >
                           B1 Deutsch-Intensivkurs
@@ -96,7 +96,7 @@ export const Header = () => {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:translate-x-1 focus:bg-accent focus:text-accent-foreground border-b border-border"
                           href="/kurse/b2"
                         >
                           B2 Deutsch-Intensivkurs
@@ -106,7 +106,7 @@ export const Header = () => {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:translate-x-1 focus:bg-accent focus:text-accent-foreground"
                           href="/kurse/c1"
                         >
                           C1 Deutsch-Intensivkurs
