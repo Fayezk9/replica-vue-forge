@@ -112,55 +112,71 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
             </form>
           </TabsContent>
           
-          <TabsContent value="signup">
+          <TabsContent value="signup" className="animate-fade-in">
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="signup-name">Vollständiger Name</Label>
+              <div className="space-y-2 transition-all duration-300 animate-slide-in-up" style={{ animationDelay: '50ms' }}>
+                <Label htmlFor="signup-name" className="transition-colors duration-200">Vollständiger Name</Label>
                 <Input
                   id="signup-name"
                   type="text"
                   placeholder="Max Mustermann"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
+                  className="transition-all duration-200 focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="signup-username">Benutzername</Label>
+              <div className="space-y-2 transition-all duration-300 animate-slide-in-up" style={{ animationDelay: '100ms' }}>
+                <Label htmlFor="signup-username" className="transition-colors duration-200">Benutzername</Label>
                 <Input
                   id="signup-username"
                   type="text"
                   placeholder="maxmuster"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  className="transition-all duration-200 focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="signup-email">E-Mail</Label>
+              <div className="space-y-2 transition-all duration-300 animate-slide-in-up" style={{ animationDelay: '150ms' }}>
+                <Label htmlFor="signup-email" className="transition-colors duration-200">E-Mail</Label>
                 <Input
                   id="signup-email"
                   type="email"
                   placeholder="ihre@email.de"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="transition-all duration-200 focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="signup-password">Passwort</Label>
+              <div className="space-y-2 transition-all duration-300 animate-slide-in-up" style={{ animationDelay: '200ms' }}>
+                <Label htmlFor="signup-password" className="transition-colors duration-200">Passwort</Label>
                 <Input
                   id="signup-password"
                   type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="transition-all duration-200 focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   required
                 />
               </div>
-              
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Wird geladen...' : 'Konto erstellen'}
+
+              <Button
+                type="submit"
+                className="w-full transition-all duration-200 gap-2 animate-slide-in-up"
+                style={{ animationDelay: '250ms' }}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin-slow" />
+                    Wird geladen...
+                  </>
+                ) : (
+                  'Konto erstellen'
+                )}
               </Button>
             </form>
           </TabsContent>
