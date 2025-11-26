@@ -69,32 +69,45 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
             <TabsTrigger value="signup" className="transition-all duration-200 data-[state=active]:shadow-md">Registrieren</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="login">
+          <TabsContent value="login" className="animate-fade-in">
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="login-email">E-Mail</Label>
+              <div className="space-y-2 transition-all duration-300 animate-slide-in-up" style={{ animationDelay: '50ms' }}>
+                <Label htmlFor="login-email" className="transition-colors duration-200">E-Mail</Label>
                 <Input
                   id="login-email"
                   type="email"
                   placeholder="ihre@email.de"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="transition-all duration-200 focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="login-password">Passwort</Label>
+              <div className="space-y-2 transition-all duration-300 animate-slide-in-up" style={{ animationDelay: '100ms' }}>
+                <Label htmlFor="login-password" className="transition-colors duration-200">Passwort</Label>
                 <Input
                   id="login-password"
                   type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="transition-all duration-200 focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   required
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Wird geladen...' : 'Anmelden'}
+              <Button
+                type="submit"
+                className="w-full transition-all duration-200 gap-2"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin-slow" />
+                    Wird geladen...
+                  </>
+                ) : (
+                  'Anmelden'
+                )}
               </Button>
             </form>
           </TabsContent>
