@@ -5,20 +5,90 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Global smooth behavior */
+html {
+  scroll-behavior: smooth;
 }
 
-@keyframes logo-spin {
+/* Selection styling */
+::selection {
+  @apply bg-primary text-primary-foreground;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded hover:bg-muted-foreground transition-colors;
+}
+
+/* Focus visible styles for accessibility */
+:focus-visible {
+  @apply outline-none ring-2 ring-primary ring-offset-2;
+}
+
+/* Smooth transitions for all interactive elements */
+button,
+a,
+input,
+select,
+textarea {
+  @apply transition-all duration-200;
+}
+
+/* Link underline animation */
+a:not([class*="button"]):not([class*="nav"]) {
+  @apply relative;
+}
+
+a:not([class*="button"]):not([class*="nav"])::after {
+  content: "";
+  @apply absolute bottom-0 left-0 w-full h-0.5 bg-primary origin-left scale-x-0 transition-transform duration-300;
+}
+
+a:not([class*="button"]):not([class*="nav"]):hover::after,
+a:not([class*="button"]):not([class*="nav"]):focus-visible::after {
+  @apply scale-x-100;
+}
+
+/* Input focus animations */
+input:focus,
+textarea:focus,
+select:focus {
+  @apply ring-2 ring-primary ring-offset-2 transition-all duration-200;
+}
+
+/* Placeholder animations */
+input::placeholder,
+textarea::placeholder {
+  @apply transition-opacity duration-200;
+}
+
+input:focus::placeholder,
+textarea:focus::placeholder {
+  @apply opacity-50;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Loading spinner animation */
+@keyframes spin-custom {
   from {
     transform: rotate(0deg);
   }
@@ -27,16 +97,67 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.animate-spin-custom {
+  animation: spin-custom 1s linear infinite;
 }
 
-.card {
-  padding: 2em;
+/* Smooth page transitions */
+main {
+  @apply animate-fade-in;
 }
 
-.read-the-docs {
-  color: #888;
+/* Card hover lift effect base */
+.card-hover {
+  @apply transition-all duration-300;
+}
+
+.card-hover:hover {
+  @apply shadow-lg -translate-y-1;
+}
+
+/* Button ripple effect base */
+button {
+  @apply relative overflow-hidden;
+}
+
+/* Smooth color transitions for interactive elements */
+[role="button"],
+[role="link"],
+button,
+a[href] {
+  @apply transition-colors duration-200;
+}
+
+/* Navigation link underline */
+nav a,
+[role="navigation"] a {
+  @apply relative transition-colors duration-200;
+}
+
+nav a::after,
+[role="navigation"] a::after {
+  content: "";
+  @apply absolute bottom-0 left-0 w-full h-0.5 bg-primary origin-left scale-x-0 transition-transform duration-300;
+}
+
+nav a:hover::after,
+nav a:focus-visible::after,
+[role="navigation"] a:hover::after,
+[role="navigation"] a:focus-visible::after {
+  @apply scale-x-100;
+}
+
+/* Smooth badge animations */
+.badge {
+  @apply transition-all duration-200;
+}
+
+/* Dialog backdrop animation */
+[role="dialog"] {
+  @apply animate-fade-in;
+}
+
+/* Modal overlay smooth entrance */
+[role="dialog"] + div {
+  @apply animate-fade-in;
 }
