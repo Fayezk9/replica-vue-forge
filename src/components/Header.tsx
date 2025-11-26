@@ -118,15 +118,15 @@ export const Header = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent">
+                <NavigationMenuTrigger className="bg-transparent hover:bg-accent/50 transition-colors duration-200">
                   telc Prüfungen
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-popover z-50">
+                <NavigationMenuContent className="bg-popover z-50 animate-slide-in-down">
                   <ul className="grid w-[300px] gap-0 p-0">
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:translate-x-1 focus:bg-accent focus:text-accent-foreground border-b border-border"
                           href="/telc-b1"
                         >
                           telc Deutsch B1
@@ -136,7 +136,7 @@ export const Header = () => {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground border-b border-border"
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:translate-x-1 focus:bg-accent focus:text-accent-foreground border-b border-border"
                           href="/telc-b2"
                         >
                           telc Deutsch B2
@@ -146,7 +146,7 @@ export const Header = () => {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          className="block px-4 py-3 text-sm leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:translate-x-1 focus:bg-accent focus:text-accent-foreground"
                           href="/telc-c1"
                         >
                           telc Deutsch C1 Hochschule
