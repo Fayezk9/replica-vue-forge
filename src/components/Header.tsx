@@ -119,7 +119,7 @@ export const Header = () => {
 
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="bg-transparent hover:bg-accent/50 transition-colors duration-200">
-                  telc Prüfungen
+                  Prüfungsvorbereitungen
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="bg-popover z-50 animate-slide-in-down">
                   <ul className="grid w-[300px] gap-0 p-0">
