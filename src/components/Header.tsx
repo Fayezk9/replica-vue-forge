@@ -158,15 +158,15 @@ export const Header = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent">
+                <NavigationMenuTrigger className="bg-transparent hover:bg-accent/50 transition-colors duration-200">
                   Integrationskurse
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-popover">
+                <NavigationMenuContent className="bg-popover animate-slide-in-down">
                   <ul className="grid w-[500px] gap-3 p-4">
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:translate-x-1 focus:bg-accent focus:text-accent-foreground"
                           href="#integration"
                         >
                           <div className="text-sm font-medium leading-none">Integrationskurse</div>
