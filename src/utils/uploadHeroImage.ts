@@ -7,6 +7,11 @@ export async function uploadHeroImageToSupabase(): Promise<string | null> {
       throw new Error("VITE_SUPABASE_URL is not set");
     }
 
+    const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    if (!anonKey) {
+      throw new Error("VITE_SUPABASE_PUBLISHABLE_KEY is not set");
+    }
+
     const functionUrl = `${supabaseUrl}/functions/v1/upload-hero-image`;
     console.log("Calling Edge Function at:", functionUrl);
 
@@ -14,6 +19,7 @@ export async function uploadHeroImageToSupabase(): Promise<string | null> {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${anonKey}`,
       },
       body: JSON.stringify({ imageUrl: IMAGE_URL }),
     });
