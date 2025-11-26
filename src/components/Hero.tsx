@@ -25,9 +25,12 @@ export const Hero = () => {
   return (
     <section className="relative h-[600px] flex items-center justify-center overflow-hidden bg-gray-100">
       {!isLoading && imageUrl && (
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${imageUrl})` }}
+        <img
+          src={imageUrl}
+          alt="Hero"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+          style={{ imageRendering: "high-quality" }}
+          loading="eager"
         />
       )}
     </section>
