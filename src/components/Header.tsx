@@ -49,7 +49,7 @@ export const Header = () => {
             <NavigationMenuList className="gap-2">
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="bg-transparent hover:bg-accent/50 transition-colors duration-200">
-                  Intensivkurse A1-C1
+                  Deutschkurse
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="bg-popover z-50">
                   <ul className="grid w-[300px] gap-0 p-0">
