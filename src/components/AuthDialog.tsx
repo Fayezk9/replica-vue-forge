@@ -57,16 +57,16 @@ const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] animate-slide-in-up">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="transition-all duration-300">
             {isLogin ? 'Anmelden' : 'Konto erstellen'}
           </DialogTitle>
         </DialogHeader>
-        <Tabs value={isLogin ? 'login' : 'signup'} onValueChange={(v) => setIsLogin(v === 'login')}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Anmelden</TabsTrigger>
-            <TabsTrigger value="signup">Registrieren</TabsTrigger>
+        <Tabs value={isLogin ? 'login' : 'signup'} onValueChange={(v) => setIsLogin(v === 'login')} className="transition-all duration-300">
+          <TabsList className="grid w-full grid-cols-2 transition-all duration-300">
+            <TabsTrigger value="login" className="transition-all duration-200 data-[state=active]:shadow-md">Anmelden</TabsTrigger>
+            <TabsTrigger value="signup" className="transition-all duration-200 data-[state=active]:shadow-md">Registrieren</TabsTrigger>
           </TabsList>
           
           <TabsContent value="login">
