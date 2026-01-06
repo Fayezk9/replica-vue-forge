@@ -8,7 +8,7 @@ export const Hero = () => {
         src={imageUrl}
         alt="Hero"
         className="absolute inset-0 w-full h-full object-cover object-center"
-        style={{ imageRendering: "high-quality" }}
+        style={{ imageRendering: "auto" }}
         loading="eager"
       />
     </section>
