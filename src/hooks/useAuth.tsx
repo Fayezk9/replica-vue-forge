@@ -91,10 +91,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// Default values for when AuthProvider is not present
+const defaultAuthValue: AuthContextType = {
+  user: null,
+  session: null,
+  loading: false,
+  signUp: async () => ({ error: new Error('AuthProvider not found') }),
+  signIn: async () => ({ error: new Error('AuthProvider not found') }),
+  signOut: async () => {},
+};
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
+  // Return default values if used outside provider (graceful fallback)
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    return defaultAuthValue;
   }
   return context;
 };
