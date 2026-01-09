@@ -10,19 +10,25 @@ import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
-// Lazy load other pages to avoid import chain crashes
-const TelcOverview = lazy(() => import("./pages/TelcOverview"));
-const TelcB1 = lazy(() => import("./pages/TelcB1"));
-const TelcB2 = lazy(() => import("./pages/TelcB2"));
-const TelcC1 = lazy(() => import("./pages/TelcC1"));
-const Courses = lazy(() => import("./pages/Courses"));
-const CourseA1 = lazy(() => import("./pages/CourseA1"));
-const CourseA2 = lazy(() => import("./pages/CourseA2"));
-const CourseB1 = lazy(() => import("./pages/CourseB1"));
-const CourseB2 = lazy(() => import("./pages/CourseB2"));
-const CourseC1 = lazy(() => import("./pages/CourseC1"));
-const Cart = lazy(() => import("./pages/Cart"));
-const Checkout = lazy(() => import("./pages/Checkout"));
+// Lazy load pages - courses
+const CoursesIndex = lazy(() => import("./pages/courses/Index"));
+const CourseA1 = lazy(() => import("./pages/courses/A1"));
+const CourseA2 = lazy(() => import("./pages/courses/A2"));
+const CourseB1 = lazy(() => import("./pages/courses/B1"));
+const CourseB2 = lazy(() => import("./pages/courses/B2"));
+const CourseC1 = lazy(() => import("./pages/courses/C1"));
+
+// Lazy load pages - telc
+const TelcIndex = lazy(() => import("./pages/telc/Index"));
+const TelcB1 = lazy(() => import("./pages/telc/B1"));
+const TelcB2 = lazy(() => import("./pages/telc/B2"));
+const TelcC1 = lazy(() => import("./pages/telc/C1"));
+
+// Lazy load pages - checkout
+const Cart = lazy(() => import("./pages/checkout/Cart"));
+const Checkout = lazy(() => import("./pages/checkout/Checkout"));
+
+// Other pages
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const LoadingFallback = () => (
@@ -45,13 +51,13 @@ const App = () => (
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/kurse" element={<Courses />} />
+            <Route path="/kurse" element={<CoursesIndex />} />
             <Route path="/kurse/a1" element={<CourseA1 />} />
             <Route path="/kurse/a2" element={<CourseA2 />} />
             <Route path="/kurse/b1" element={<CourseB1 />} />
             <Route path="/kurse/b2" element={<CourseB2 />} />
             <Route path="/kurse/c1" element={<CourseC1 />} />
-            <Route path="/telc-prufungen" element={<TelcOverview />} />
+            <Route path="/telc-prufungen" element={<TelcIndex />} />
             <Route path="/telc-b1" element={<TelcB1 />} />
             <Route path="/telc-b2" element={<TelcB2 />} />
             <Route path="/telc-c1" element={<TelcC1 />} />
